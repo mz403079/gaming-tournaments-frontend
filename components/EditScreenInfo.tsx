@@ -1,12 +1,42 @@
 import * as WebBrowser from 'expo-web-browser';
-import React from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
 
 import Colors from '../constants/Colors';
 import { MonoText } from './StyledText';
 import { Text, View } from './Themed';
 
+interface Tournament {
+  tournamentId: string;
+  name: string;
+  tournamentStart: string;
+  tournamentEnd: string;
+  maxTeamSize: number;
+  maxNumberOfTeams: number;
+  currentNumberOfTeams: number;
+  regulations: string;
+  organizer: string;
+  teams: string[];
+}
+
 export default function EditScreenInfo({ path }: { path: string }) {
+  const [isLoading, setLoading] = useState(true);
+  const [data, setData] = useState<Tournament[] | []>([] as Tournament[]);
+
+  const getMovies = async () => {
+    try {
+     const response = await fetch('http://localhost:8080/api/getTournaments');
+     const json = await response.json();
+     setData(json);
+   } catch (error) {
+     console.error(error);
+   } finally {
+     setLoading(false);
+   }
+ }
+ useEffect(() => {
+  getMovies();
+}, []);
   return (
     <View>
       <View style={styles.getStartedContainer}>
@@ -23,13 +53,26 @@ export default function EditScreenInfo({ path }: { path: string }) {
           lightColor="rgba(0,0,0,0.05)">
           <MonoText>{path}</MonoText>
         </View>
-
-        <Text
-          style={styles.getStartedText}
-          lightColor="rgba(0,0,0,0.8)"
-          darkColor="rgba(255,255,255,0.8)">
-          Change any of the text, save the file, and your app will automatically update.
-        </Text>
+        <View >
+        {isLoading ? <ActivityIndicator/> : (
+        <FlatList
+          data={data}
+          keyExtractor={({ tournamentId }, index) => tournamentId}
+          renderItem={({ item }) => (
+            <View>
+              <Text style={styles.getStartedText}
+              lightColor="rgba(0,0,0,0.8)"
+              darkColor="rgba(255,255,255,0.8)"> {item.name} - {item.tournamentStart} </Text>
+              <Text style={styles.getStartedText}
+              lightColor="rgba(0,0,0,0.8)"
+              darkColor="rgba(255,255,255,0.8)"> {item.currentNumberOfTeams}/{item.maxNumberOfTeams} </Text>
+            </View>
+            
+          )}
+        />
+        )}
+        </View>
+      
       </View>
 
       <View style={styles.helpContainer}>
