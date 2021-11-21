@@ -1,23 +1,79 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import React, {useEffect} from 'react';
+import {SafeAreaView, View, Text, TouchableOpacity, ActivityIndicator} from "react-native";
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import SignInScreen from "./screens/SignInScreen";
+import SignUpScreen from "./screens/SignUpScreen";
+import MainScreen from "./screens/MainScreen";
+import HomeScreen from "./screens/HomeScreen";
+import RootStackScreen from "./screens/RootStackScreen";
+import {AuthContext} from "./components/context";
+import {
+    useFonts,
+    Roboto_100Thin,
+    Roboto_100Thin_Italic,
+    Roboto_300Light,
+    Roboto_300Light_Italic,
+    Roboto_400Regular,
+    Roboto_400Regular_Italic,
+    Roboto_500Medium,
+    Roboto_500Medium_Italic,
+    Roboto_700Bold,
+    Roboto_700Bold_Italic,
+    Roboto_900Black,
+    Roboto_900Black_Italic,
+} from '@expo-google-fonts/roboto';
+import GamingIcon from './assets/images/Gaming.svg'
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import {DrawerContent} from "./screens/DrawerContent";
+const Drawer = createDrawerNavigator();
+const App = () => {
+    const [isLoading, setIsLoading] = React.useState(true);
+    const [userToken, setUserToken] = React.useState<any>(null);
 
-import useCachedResources from './hooks/useCachedResources';
-import useColorScheme from './hooks/useColorScheme';
-import Navigation from './navigation';
-
-export default function App() {
-  const isLoadingComplete = useCachedResources();
-  const colorScheme = useColorScheme();
-
-  if (!isLoadingComplete) {
-    return null;
-  } else {
+    const authContext = React.useMemo(() => ({
+        signIn: () => {
+            setUserToken('xyz');
+            setIsLoading(false);
+        },
+        signOut: () => {
+            setUserToken(null);
+            setIsLoading(false);
+        },
+        signUp: () => {
+            setUserToken('xyz');
+            setIsLoading(false);
+        }
+    }), []);
+    useEffect(() => {
+        setTimeout(() => {
+            setIsLoading(false);
+        }, 1000);
+    }, []);
+    if(isLoading){
+        return (
+            <View style = {{flex:1, justifyContent:'center', alignItems:'center', backgroundColor: '#121212'}}>
+                <ActivityIndicator size={"large"}/>
+            </View>
+        );
+    }
     return (
-      <SafeAreaProvider>
-        <Navigation colorScheme={colorScheme} />
-        <StatusBar />
-      </SafeAreaProvider>
-    );
-  }
+        <AuthContext.Provider value={authContext}>
+            <NavigationContainer>
+                { userToken != null ? (
+                <Drawer.Navigator drawerContent={props => <DrawerContent {...{props}} />}>
+                    <Drawer.Screen component={MainScreen} name="Main" options={{headerShown:false}}/>
+                    <Drawer.Screen component={SignInScreen} name="SignIn" options={{headerShown: false}}/>
+                    <Drawer.Screen component={SignUpScreen} name="SignUp" options={{headerShown: false}}/>
+                    <Drawer.Screen component={HomeScreen} name="Home" options={{headerShown: false}}/>
+                </Drawer.Navigator>
+                )
+                :
+                <RootStackScreen/>}
+            </NavigationContainer>
+        </AuthContext.Provider>
+    )
 }
+
+export default App;
+

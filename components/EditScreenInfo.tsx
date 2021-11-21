@@ -25,7 +25,7 @@ export default function EditScreenInfo({ path }: { path: string }) {
 
   const getMovies = async () => {
     try {
-     const response = await fetch('http://localhost:8080/api/getTournaments');
+     const response = await fetch('https://gen-gg.herokuapp.com/api/getTournaments');
      const json = await response.json();
      setData(json);
    } catch (error) {
