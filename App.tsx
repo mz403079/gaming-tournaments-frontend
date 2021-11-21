@@ -8,6 +8,7 @@ import MainScreen from "./screens/MainScreen";
 import HomeScreen from "./screens/HomeScreen";
 import RootStackScreen from "./screens/RootStackScreen";
 import {AuthContext} from "./components/context";
+import MainTabScreen from "./screens/MainTabScreen";
 import {
     useFonts,
     Roboto_100Thin,
@@ -26,6 +27,9 @@ import {
 import GamingIcon from './assets/images/Gaming.svg'
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import {DrawerContent} from "./screens/DrawerContent";
+import MapScreen from "./screens/MapScreen";
+import ProfileScreen from "./screens/ProfileScreen";
+import MyTicketsScreen from "./screens/MyTicketsScreen";
 const Drawer = createDrawerNavigator();
 const App = () => {
     const [isLoading, setIsLoading] = React.useState(true);
@@ -62,10 +66,13 @@ const App = () => {
             <NavigationContainer>
                 { userToken != null ? (
                 <Drawer.Navigator drawerContent={props => <DrawerContent {...{props}} />}>
+                    <Drawer.Screen component={MainTabScreen} name="Home" options={{headerShown: false}}/>
                     <Drawer.Screen component={MainScreen} name="Main" options={{headerShown:false}}/>
                     <Drawer.Screen component={SignInScreen} name="SignIn" options={{headerShown: false}}/>
                     <Drawer.Screen component={SignUpScreen} name="SignUp" options={{headerShown: false}}/>
-                    <Drawer.Screen component={HomeScreen} name="Home" options={{headerShown: false}}/>
+                    <Drawer.Screen component={MapScreen} name="Map" options={{headerShown: false}}/>
+                    <Drawer.Screen component={MyTicketsScreen} name="MyTickets" options={{headerShown: false}}/>
+                    <Drawer.Screen component={ProfileScreen} name="Profile" options={{headerShown: false}}/>
                 </Drawer.Navigator>
                 )
                 :
