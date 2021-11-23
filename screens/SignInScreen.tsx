@@ -8,8 +8,9 @@ import {
     TextInput,
     StyleSheet,
     StatusBar,
-    Platform
+    Platform,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Animatable from 'react-native-animatable';
 import {LinearGradient} from 'expo-linear-gradient';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -31,15 +32,48 @@ import {
 import {Feather, FontAwesome} from "@expo/vector-icons";
 import {AuthContext} from "../components/context";
 
+interface FormData {
+    password: string;
+    username: string;
+  }
+const signInRequest = async (data: FormData) => {
+  try {
+    const response = await fetch(
+      "https://gen-gg.herokuapp.com/api/auth/signin",
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: data.username,
+          plainPassword: data.password,
+        }),
+      }
+    );
+    const json = await response.json();
+    await AsyncStorage.setItem('user',JSON.stringify(json));
+    console.log(await AsyncStorage.getItem('user'));
+  } catch (error) {
+    console.error(error);
+  }
+};
 const SignInScreen = ({navigation}: {navigation: any}) => {
+    const { signIn } = React.useContext(AuthContext);
+    function sign() {
+        signInRequest({
+          password: data.password,
+          username: data.email,
+        });
+        signIn();
+      }
     const [data, setData] = React.useState({
         email: '',
         password: '',
         check_textInputChange: false,
         secureTextEntry:true
     });
-
-    const {signIn} = React.useContext(AuthContext);
 
     function textInputChange(val: string) {
         if(val.length != 0) {
@@ -143,7 +177,7 @@ const SignInScreen = ({navigation}: {navigation: any}) => {
                             backgroundColor: '#03DAC5',
                             marginTop: 15
                         }]}
-                        onPress={() => {signIn()}}
+                        onPress={() => {sign()}}
                         >
                         <Text style={[styles.textSign, {
                             color: '#121212'
