@@ -12,3 +12,5 @@ export const sliderData = [
         image: require('../assets/images/homescreen/event.jpeg'),
     },
 ];
+
+export default sliderData

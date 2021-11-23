@@ -1,5 +1,14 @@
-import {Text, View, SafeAreaView, ScrollView, ImageBackground, TextInput, TouchableOpacity} from "react-native";
-import React from "react";
+import {
+    Text,
+    View,
+    SafeAreaView,
+    ScrollView,
+    ImageBackground,
+    TextInput,
+    TouchableOpacity,
+    ActivityIndicator
+} from "react-native";
+import React, {useEffect, useRef, useState} from "react";
 import Carousel from 'react-native-snap-carousel';
 import {windowWidth} from '../utils/Dimensions'
 import {
@@ -22,10 +31,61 @@ import {Feather} from "@expo/vector-icons";
 import {sliderData} from "../model/data";
 import BannerSlider from "../components/BannerSlider";
 
+type TournamentProps = {
+    name: string,
+    currentNumberOfTeams: number,
+    description: string,
+    lan: boolean,
+    maxNumberOfTeams: number,
+    maxTeamSize: number,
+    reward: string,
+    rules: string,
+    teams: [],
+    tournamentEnd: string,
+    tournamentId: number,
+    tournamentStart: string;
+}
 const HomeScreen = () => {
-    // @ts-ignore
-    const renderBanner = ({item, index}) => {
-        return <BannerSlider data={item}/>
+
+    const [isLoading, setLoading] = useState(false);
+    const [tournaments, setTournaments] = useState([]);
+    const tournamentsURL = 'https://gen-gg.herokuapp.com/api/getTournaments';
+
+    let getTournaments = () => {
+        fetch(tournamentsURL)
+            .then((response) => response.json())
+            .then((json) => setTournaments(json))
+            .catch((error) => console.error(error))
+            .finally(() => setLoading(false));
+    }
+    useEffect(() => {
+        setLoading(true);
+        getTournaments();
+    }, []);
+
+    const carouselRef = useRef<Carousel<any>>(null)
+    const renderBanner = ({item, index}: { item: TournamentProps, index: any }) => {
+        console.log(item.name);
+        return <BannerSlider name={item.name}
+                             currentNumberOfTeams={item.currentNumberOfTeams}
+                             description={item.description}
+                             lan={item.lan}
+                             maxNumberOfTeams={item.maxNumberOfTeams}
+                             maxTeamSize={item.maxTeamSize}
+                             reward={item.reward}
+                             rules={item.rules}
+                             teams={item.teams}
+                             tournamentEnd={item.tournamentEnd}
+                             tournamentId={item.tournamentId}
+                             tournamentStart={item.tournamentStart}/>
+    }
+
+    if (isLoading) {
+        return (
+            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#121212'}}>
+                <ActivityIndicator size={"large"}/>
+            </View>
+        );
     }
     return (
         <SafeAreaView style={{flex: 1, backgroundColor: "#121212"}}>
@@ -34,7 +94,8 @@ const HomeScreen = () => {
                     flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20,
                 }}>
 
-                    <Text style={{fontSize: 16, fontFamily: 'Roboto_500Medium', color: '#fff'}}>Hello Amogus</Text>
+                    <Text style={{fontSize: 16, fontFamily: 'Roboto_500Medium', color: '#fff'}}>Hello
+                        Amogus</Text>
                     <ImageBackground
                         source={{uri: 'https://play-lh.googleusercontent.com/8ddL1kuoNUB5vUvgDVjYY3_6HwQcrg1K2fd_R8soD-e2QYj8fT9cfhfh3G0hnSruLKec'}}
                         style={{width: 35, height: 35}}
@@ -55,24 +116,25 @@ const HomeScreen = () => {
                 <View style={{
                     marginVertical: 15,
                     flexDirection: 'row',
-                    justifyContent: 'space-between'}}>
-                    <Text style={{fontSize: 18, fontFamily: 'Roboto_500Medium', color: '#fff'}}> Upcoming Events</Text>
+                    justifyContent: 'space-between'
+                }}>
+                    <Text style={{fontSize: 18, fontFamily: 'Roboto_500Medium', color: '#fff'}}> Upcoming
+                        Events</Text>
                     <TouchableOpacity onPress={() => {
                     }}>
                         <Text style={{color: '#03DAC5'}}>See all</Text>
                     </TouchableOpacity>
                 </View>
                 <Carousel
-                    ref={(c) => { // @ts-ignore
-                        this._carousel = c; }}
-                    data={sliderData}
+                    ref={(ref) => (carouselRef.current?.snapToNext)}
+                    data={tournaments}
                     renderItem={renderBanner}
                     sliderWidth={windowWidth - 40}
                     itemWidth={300}
+                    loop={true}
                 />
             </ScrollView>
         </SafeAreaView>
     );
 }
-
 export default HomeScreen;
