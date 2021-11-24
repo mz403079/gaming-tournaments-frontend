@@ -16,11 +16,13 @@ const MainTabScreen = () => (
         initialRouteName="Feed"
         activeColor="#03DAC5"
         barStyle={{ backgroundColor: '#303030' }}
+
         >
         <Tab.Screen
             name="HomeTab"
             component={HomeStackScreen}
             options={{
+
                 tabBarLabel: 'Home',
                 tabBarIcon: ({ color }) => (
                     <Icon name="ios-home" color={color} size={26} />
@@ -81,10 +83,11 @@ const HomeStackScreen = ({navigation}: {navigation: any}) => (
         }
     }}>
         <HomeStack.Screen name="Home" component={HomeScreen} options={{
-            title:'Home',
-            headerLeft: () => (
-                <Icon.Button name="ios-menu" size={25} backgroundColor="#009387" onPress={() => navigation.openDrawer()}/>
-            )
+            title:'',
+            // headerLeft: () => (
+            //     <Icon.Button name="ios-menu" size={25} backgroundColor="#009387" onPress={() => navigation.openDrawer()}/>
+            // )
+            headerShown:false
         }} />
     </HomeStack.Navigator>
 );

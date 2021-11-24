@@ -13,7 +13,7 @@ import {
     Roboto_700Bold, Roboto_700Bold_Italic, Roboto_900Black, Roboto_900Black_Italic,
     useFonts
 } from "@expo-google-fonts/roboto";
-import {SafeAreaView, Text, TouchableOpacity, View} from "react-native";
+import {SafeAreaView, StatusBar, Text, TouchableOpacity, View} from "react-native";
 import {colors} from "../assets/colors/colors";
 import GamingIcon from "../assets/images/Gaming.svg";
 import {MaterialIcons} from "@expo/vector-icons";
@@ -46,6 +46,7 @@ const MainScreen = ({navigation}: {navigation: any}) => {
                 alignItems: 'center',
                 backgroundColor: colors.background
             }}>
+                <StatusBar barStyle="light-content"/>
                 <View style={{marginTop: 30}}>
                     <Text style={{
                         fontSize: 30,

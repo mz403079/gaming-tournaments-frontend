@@ -6,11 +6,12 @@ import {
     ImageBackground,
     TextInput,
     TouchableOpacity,
-    ActivityIndicator
+    ActivityIndicator, StatusBar, FlatList
 } from "react-native";
 import React, {useEffect, useRef, useState} from "react";
 import Carousel from 'react-native-snap-carousel';
 import {windowWidth} from '../utils/Dimensions'
+import ListItem from '../components/ListItem'
 import {
     useFonts,
     Roboto_100Thin,
@@ -30,6 +31,9 @@ import GamingIcon from './assets/images/Gaming.svg'
 import {Feather} from "@expo/vector-icons";
 import {sliderData} from "../model/data";
 import BannerSlider from "../components/BannerSlider";
+import CustomSwitch from "../components/CustomSwitch";
+import {render} from "react-dom";
+import {List} from "react-native-paper";
 
 type TournamentProps = {
     name: string,
@@ -50,7 +54,10 @@ const HomeScreen = () => {
     const [isLoading, setLoading] = useState(false);
     const [tournaments, setTournaments] = useState([]);
     const tournamentsURL = 'https://gen-gg.herokuapp.com/api/getTournaments';
-
+    const [eventsTab, setEventsTab] = useState(1);
+    const onSelectSwitch = (value) => {
+        setEventsTab(value);
+    }
     let getTournaments = () => {
         fetch(tournamentsURL)
             .then((response) => response.json())
@@ -65,8 +72,22 @@ const HomeScreen = () => {
 
     const carouselRef = useRef<Carousel<any>>(null)
     const renderBanner = ({item, index}: { item: TournamentProps, index: any }) => {
-        console.log(item.name);
         return <BannerSlider name={item.name}
+                             currentNumberOfTeams={item.currentNumberOfTeams}
+                             description={item.description}
+                             lan={item.lan}
+                             maxNumberOfTeams={item.maxNumberOfTeams}
+                             maxTeamSize={item.maxTeamSize}
+                             reward={item.reward}
+                             rules={item.rules}
+                             teams={item.teams}
+                             tournamentEnd={item.tournamentEnd}
+                             tournamentId={item.tournamentId}
+                             tournamentStart={item.tournamentStart}/>
+    }
+    const renderList = ({item, index}: { item: TournamentProps, index: any }) => {
+        console.log(item.name);
+        return <ListItem name={item.name}
                              currentNumberOfTeams={item.currentNumberOfTeams}
                              description={item.description}
                              lan={item.lan}
@@ -89,12 +110,13 @@ const HomeScreen = () => {
     }
     return (
         <SafeAreaView style={{flex: 1, backgroundColor: "#121212"}}>
+            <StatusBar barStyle="light-content"/>
             <ScrollView style={{padding: 20}}>
                 <View style={{
                     flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20,
                 }}>
 
-                    <Text style={{fontSize: 16, fontFamily: 'Roboto_500Medium', color: '#fff'}}>Hello
+                    <Text style={{fontSize: 20, fontFamily: 'Roboto_500Medium', color: '#fff'}}>Hello
                         Amogus</Text>
                     <ImageBackground
                         source={{uri: 'https://play-lh.googleusercontent.com/8ddL1kuoNUB5vUvgDVjYY3_6HwQcrg1K2fd_R8soD-e2QYj8fT9cfhfh3G0hnSruLKec'}}
@@ -133,6 +155,20 @@ const HomeScreen = () => {
                     itemWidth={300}
                     loop={true}
                 />
+                <View style={{marginVertical: 20}}>
+                    <CustomSwitch
+                        selectionMode={1}
+                        option1={"Free Events"}
+                        option2={"Paid Events"}
+                        onSelectSwitch={onSelectSwitch}
+                    />
+                </View>
+                {eventsTab == 1 &&
+                <FlatList
+                    renderItem={renderList}
+                    data={tournaments}/>
+                }
+                {eventsTab == 2 && <Text style={{color: '#fff'}}>Paid Events</Text>}
             </ScrollView>
         </SafeAreaView>
     );

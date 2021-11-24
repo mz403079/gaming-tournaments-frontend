@@ -22,12 +22,12 @@ const BannerSlider: FC<TournamentProps> = ({name, tournamentStart}) => {
     let month = moment(momentObj).format('MMM').toUpperCase();
     let day = moment(momentObj).format('DD').toUpperCase();
     return (
-        <View style={{flexDirection: 'column', borderRadius: 20, borderColor: '#03DAC5', borderWidth: 0.5, alignSelf:'baseline', overflow: 'hidden'}}>
-            <Image source={{uri: 'https://www.fifagamenews.com/wp-content/uploads/2019/03/FGN817-1-650x332.jpg'}} style={{height: 150, width: 300, borderTopRightRadius: 20, borderTopLeftRadius: 20}}/>
+        <View style={{flexDirection: 'column', borderRadius: 20, borderColor: '#03DAC5', borderWidth: 1, alignSelf:'baseline', overflow: 'hidden'}}>
+            <Image source={{uri: 'https://www.fifagamenews.com/wp-content/uploads/2019/03/FGN817-1-650x332.jpg'}} style={{height: 120, width: 300, borderTopRightRadius: 20, borderTopLeftRadius: 20}}/>
             <View style={{alignItems: 'center', flexDirection: 'row'}}>
-                <View style={{width: 60, height: 60, backgroundColor: '#E4FFF9', borderRadius: 12, margin: 20, alignItems: 'center', justifyContent: 'center'}}>
-                    <Text style={{fontFamily: "Roboto_700Bold", fontSize: 16, color: "#03DAC5"}}>{month}</Text>
-                    <Text style={{fontFamily: "Roboto_500Medium", fontSize: 16}}>{day}</Text>
+                <View style={{width: 55, height: 55, backgroundColor: '#E4FFF9', borderRadius: 12, margin: 12, alignItems: 'center', justifyContent: 'center'}}>
+                    <Text style={{fontFamily: "Roboto_700Bold", fontSize: 14, color: "#03DAC5"}}>{month}</Text>
+                    <Text style={{fontFamily: "Roboto_500Medium", fontSize: 14}}>{day}</Text>
                 </View>
                 <View>
                     <Text style={{fontFamily: "Roboto_700Bold", color: '#fff', fontSize: 15, marginBottom: 5}}>{name}</Text>

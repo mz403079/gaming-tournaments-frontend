@@ -31,6 +31,7 @@ import MapScreen from "./screens/MapScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import MyTicketsScreen from "./screens/MyTicketsScreen";
 const Drawer = createDrawerNavigator();
+const DrawerNavigator = Drawer.Navigator;
 const App = () => {
     const [isLoading, setIsLoading] = React.useState(true);
     const [userToken, setUserToken] = React.useState<any>(null);
@@ -63,9 +64,9 @@ const App = () => {
     }
     return (
         <AuthContext.Provider value={authContext}>
-            <NavigationContainer>
+            <NavigationContainer >
                 { userToken != null ? (
-                <Drawer.Navigator drawerContent={props => <DrawerContent {...{props}} />}>
+                <DrawerNavigator drawerContent={props => <DrawerContent {...{props}}   />} >
                     <Drawer.Screen component={MainTabScreen} name="Home" options={{headerShown: false}}/>
                     <Drawer.Screen component={MainScreen} name="Main" options={{headerShown:false}}/>
                     <Drawer.Screen component={SignInScreen} name="SignIn" options={{headerShown: false}}/>
@@ -73,7 +74,7 @@ const App = () => {
                     <Drawer.Screen component={MapScreen} name="Map" options={{headerShown: false}}/>
                     <Drawer.Screen component={MyTicketsScreen} name="MyTickets" options={{headerShown: false}}/>
                     <Drawer.Screen component={ProfileScreen} name="Profile" options={{headerShown: false}}/>
-                </Drawer.Navigator>
+                </DrawerNavigator>
                 )
                 :
                 <RootStackScreen/>}
