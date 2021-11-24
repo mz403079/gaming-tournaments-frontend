@@ -122,10 +122,8 @@ const MapStackScreen = ({navigation}: {navigation: any}) => (
         }
     }}>
         <HomeStack.Screen name="Map" component={MapScreen} options={{
-            title:'Map',
-            headerLeft: () => (
-                <Icon.Button name="ios-menu" size={25} backgroundColor="#009387" onPress={() => navigation.openDrawer()}/>
-            )
+            title:'',
+            headerShown:false
         }} />
     </HomeStack.Navigator>
 );
