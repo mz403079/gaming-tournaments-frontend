@@ -9,6 +9,7 @@ import HomeScreen from "./screens/HomeScreen";
 import RootStackScreen from "./screens/RootStackScreen";
 import {AuthContext} from "./components/context";
 import MainTabScreen from "./screens/MainTabScreen";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
     useFonts,
     Roboto_100Thin,
@@ -43,6 +44,7 @@ const App = () => {
         signOut: () => {
             setUserToken(null);
             setIsLoading(false);
+            AsyncStorage.removeItem("user");
         },
         signUp: () => {
             setUserToken('xyz');
