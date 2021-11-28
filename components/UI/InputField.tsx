@@ -15,6 +15,8 @@ interface InputProps {
   checked?: boolean;
   onChange?: (...args: any[]) => void;
   label?: string;
+  name?: string;
+  value?: string;
   helpText?: string;
   errorText?: string;
   labelText?: string;
@@ -28,13 +30,13 @@ const InputField: React.FC<InputProps> = (props) => {
     onChange,
     label,
     helpText,
-    errorText,
+    errorText = "",
     labelText,
     checked,
-    password,
+    password = false,
     ...rest
   } = props;
-  const [secureTextEntry, setSecureTextEntry] = React.useState(true);
+  const [secureTextEntry, setSecureTextEntry] = React.useState(password);
   const handleOnChange = (e: any) => {
     if (onChange) {
       onChange(e);
@@ -45,7 +47,7 @@ const InputField: React.FC<InputProps> = (props) => {
   return (
     <>
       <Text style={styles.text_footer}>{label}</Text>
-      <View style={styles.action}>
+      <View style={errorText.length > 0 ? styles.actionError : styles.action}>
         {children}
         <TextInput
           placeholder={placeholder}
@@ -70,7 +72,9 @@ const InputField: React.FC<InputProps> = (props) => {
             )}
           </TouchableOpacity>
         ) : null}
+        
       </View>
+      {errorText.length > 0 && <Text style={styles.errorMsg}>{errorText}</Text>}
     </>
   );
 };
@@ -94,5 +98,17 @@ const styles = StyleSheet.create({
     borderBottomColor: "#03DAC5",
     paddingBottom: 5,
     paddingTop: 5,
+  },
+  actionError: {
+    flexDirection: "row",
+    marginTop: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#FF0000",
+    paddingBottom: 5,
+  },
+
+  errorMsg: {
+    color: "#FF0000",
+    fontSize: 14,
   },
 });
