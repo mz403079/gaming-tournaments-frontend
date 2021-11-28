@@ -10,7 +10,7 @@ import {
     StatusBar,
     Platform,
 } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import * as Animatable from 'react-native-animatable';
 import {LinearGradient} from 'expo-linear-gradient';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -31,38 +31,12 @@ import {
 } from '@expo-google-fonts/roboto';
 import {Feather, FontAwesome} from "@expo/vector-icons";
 import {AuthContext} from "../components/context";
+import { SigIn as SignInRequest } from '../services';
 
-interface FormData {
-    password: string;
-    username: string;
-  }
-const signInRequest = async (data: FormData) => {
-  try {
-    const response = await fetch(
-      "https://gen-gg.herokuapp.com/api/auth/signin",
-      {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: data.username,
-          plainPassword: data.password,
-        }),
-      }
-    );
-    const json = await response.json();
-    await AsyncStorage.setItem('user',JSON.stringify(json));
-    console.log(await AsyncStorage.getItem('user'));
-  } catch (error) {
-    console.error(error);
-  }
-};
 const SignInScreen = ({navigation}: {navigation: any}) => {
     const { signIn } = React.useContext(AuthContext);
     function sign() {
-        signInRequest({
+        SignInRequest({
           password: data.password,
           username: data.email,
         });

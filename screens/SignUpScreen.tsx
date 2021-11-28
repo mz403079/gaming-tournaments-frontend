@@ -14,6 +14,7 @@ import * as Animatable from "react-native-animatable";
 import { AuthContext } from "../components/context";
 import { LinearGradient } from "expo-linear-gradient";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import InputField from "../components/UI/InputField";
 import {
   useFonts,
   Roboto_100Thin,
@@ -30,47 +31,23 @@ import {
   Roboto_900Black_Italic,
 } from "@expo-google-fonts/roboto";
 import { Feather, FontAwesome } from "@expo/vector-icons";
+import { SignUp as SignUpRequest } from "../services";
 
-interface FormData {
-  password: string;
-  email: string;
-}
-const signUpRequest = async (data: FormData) => {
-  try {
-    const response = await fetch(
-      "https://gen-gg.herokuapp.com/api/auth/signup",
-      {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: "eno",
-          plainPassword: data.password,
-          email: data.email,
-          name: "Kuba",
-          surname: "Bawoł",
-        }),
-      }
-    );
-    const json = await response.json();
-  } catch (error) {
-    console.error(error);
-  }
-};
 const SignUpScreen = ({ navigation }: { navigation: any }) => {
   const { signUp } = React.useContext(AuthContext);
   function register() {
-    signUpRequest({
+    SignUpRequest({
       password: data.password,
       email: data.email,
     });
     signUp();
   }
   const [data, setData] = React.useState({
+    username: "",
     email: "",
     password: "",
+    name: "",
+    surname: "",
     confirmPassword: "",
     check_textInputChange: false,
     secureTextEntry: true,
@@ -107,20 +84,6 @@ const SignUpScreen = ({ navigation }: { navigation: any }) => {
     });
   }
 
-  const updateSecureTextEntry = () => {
-    setData({
-      ...data,
-      secureTextEntry: !data.secureTextEntry,
-    });
-  };
-
-  const updateConfirmSecureTextEntry = () => {
-    setData({
-      ...data,
-      confirmSecureTextEntry: !data.confirmSecureTextEntry,
-    });
-  };
-
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor={"#121212"} barStyle="light-content" />
@@ -128,62 +91,30 @@ const SignUpScreen = ({ navigation }: { navigation: any }) => {
         <Text style={styles.text_header}>Welcome!</Text>
       </View>
       <Animatable.View animation={"fadeInUpBig"} style={styles.footer}>
-        <Text style={styles.text_footer}>Email</Text>
-        <View style={styles.action}>
+        <InputField
+          placeholder="Enter your email"
+          label="Email"
+          onChange={textInputChange}
+          checked={data.check_textInputChange}
+        >
           <FontAwesome name={"user-o"} color={"#03DAC5"} size={20} />
-          <TextInput
-            placeholder={"Enter your Email"}
-            style={styles.textInput}
-            autoCapitalize="none"
-            secureTextEntry={false}
-            onChangeText={(val) => textInputChange(val)}
-          />
-          {data.check_textInputChange ? (
-            <Animatable.View animation={"bounceIn"}>
-              <Feather name={"check-circle"} color={"green"} size={20} />
-            </Animatable.View>
-          ) : null}
-        </View>
-
-        <Text style={[styles.text_footer, { marginTop: 35 }]}>Password</Text>
-        <View style={styles.action}>
+        </InputField>
+        <InputField
+          placeholder="Enter your password"
+          label="Password"
+          password={true}
+          onChange={passwordInputChange}
+        >
           <FontAwesome name={"lock"} color={"#03DAC5"} size={20} />
-          <TextInput
-            placeholder={"Enter your Password"}
-            style={styles.textInput}
-            autoCapitalize="none"
-            secureTextEntry={data.secureTextEntry}
-            onChangeText={(val) => passwordInputChange(val)}
-          />
-          <TouchableOpacity onPress={updateSecureTextEntry}>
-            {data.secureTextEntry ? (
-              <Feather name={"eye-off"} color={"grey"} size={20} />
-            ) : (
-              <Feather name={"eye"} color={"grey"} size={20} />
-            )}
-          </TouchableOpacity>
-        </View>
-
-        <Text style={[styles.text_footer, { marginTop: 35 }]}>
-          Confirm Password
-        </Text>
-        <View style={styles.action}>
+        </InputField>
+        <InputField
+          placeholder="Enter your password"
+          label="Confirm password"
+          password={true}
+          onChange={confirmPasswordInputChange}
+        >
           <FontAwesome name={"lock"} color={"#03DAC5"} size={20} />
-          <TextInput
-            placeholder={"Enter your Password"}
-            style={styles.textInput}
-            autoCapitalize="none"
-            secureTextEntry={data.confirmSecureTextEntry}
-            onChangeText={(val) => confirmPasswordInputChange(val)}
-          />
-          <TouchableOpacity onPress={updateConfirmSecureTextEntry}>
-            {data.secureTextEntry ? (
-              <Feather name={"eye-off"} color={"grey"} size={20} />
-            ) : (
-              <Feather name={"eye"} color={"grey"} size={20} />
-            )}
-          </TouchableOpacity>
-        </View>
+        </InputField>
 
         <View style={styles.button}>
           <TouchableOpacity
