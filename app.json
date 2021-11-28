@@ -19,9 +19,14 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "gaming.tournaments",
+      "config": {
+        "googleMapsApiKey": "process.env['GOOGLE_MAPS_IOS_KEY']"
+      }
     },
     "android": {
+      "package": "gaming.tournaments",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"

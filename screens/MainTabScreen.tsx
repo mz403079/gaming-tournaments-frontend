@@ -41,7 +41,7 @@ const MainTabScreen = () => (
         />
         <Tab.Screen
             name="MapTab"
-            component={MapStackScreen}
+            component={MapScreen}
             options={{
                 tabBarLabel: 'Map',
                 tabBarIcon: ({ color }) => (
@@ -111,22 +111,22 @@ const RankingStackScreen = ({navigation}: {navigation: any}) => (
     </HomeStack.Navigator>
 );
 
-const MapStackScreen = ({navigation}: {navigation: any}) => (
-    <HomeStack.Navigator screenOptions={{
-        headerStyle: {
-            backgroundColor: '#009387',
-        },
-        headerTintColor: '#fff',
-        headerTitleStyle: {
-            fontWeight: 'bold'
-        }
-    }}>
-        <HomeStack.Screen name="Map" component={MapScreen} options={{
-            title:'',
-            headerShown:false
-        }} />
-    </HomeStack.Navigator>
-);
+// const MapStackScreen = ({navigation}: {navigation: any}) => (
+//     <HomeStack.Navigator screenOptions={{
+//         headerStyle: {
+//             backgroundColor: '#009387',
+//         },
+//         headerTintColor: '#fff',
+//         headerTitleStyle: {
+//             fontWeight: 'bold'
+//         }
+//     }}>
+//         <HomeStack.Screen name="Map" component={MapScreen} options={{
+//             title:'',
+//             headerShown:false
+//         }} />
+//     </HomeStack.Navigator>
+// );
 
 const MyTicketsStackScreen = ({navigation}: {navigation: any}) => (
     <HomeStack.Navigator screenOptions={{
