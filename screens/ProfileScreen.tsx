@@ -58,12 +58,12 @@ const ProfileScreen = () => {
                         <Text style={styles.menuItemText}>Game accounts</Text>
                     </View>
                 </TouchableRipple>
-                <TouchableRipple onPress={() => {}}>
-                    <View style={styles.menuItem}>
-                        <Icon name="account-cog" color="#03DAC5" size={25}/>
-                        <Text style={styles.menuItemText}>Settings</Text>
-                    </View>
-                </TouchableRipple>
+                {/*<TouchableRipple onPress={() => {}}>*/}
+                {/*    <View style={styles.menuItem}>*/}
+                {/*        <Icon name="account-cog" color="#03DAC5" size={25}/>*/}
+                {/*        <Text style={styles.menuItemText}>Settings</Text>*/}
+                {/*    </View>*/}
+                {/*</TouchableRipple>*/}
             </View>
         </SafeAreaView>
     );

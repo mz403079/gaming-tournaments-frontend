@@ -1,16 +1,64 @@
-import React from 'react';
-import {View, Text, Button, StyleSheet, TouchableOpacity, ImageBackground, TextInput, Platform} from 'react-native';
+import React, {useRef} from 'react';
+import {ImageBackground, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import BottomSheet from 'reanimated-bottom-sheet';
 import Animated from 'react-native-reanimated';
-// import ImagePicker from 'react-native-image-crop-picker';
+import * as ImagePicker from 'expo-image-picker';
 import {colors} from "../assets/colors/colors";
+import {UIImagePickerPresentationStyle} from "expo-image-picker/build/ImagePicker.types";
 
 const EditProfileScreen = () => {
-    const _bs = React.createRef();
+    const image = 'https://play-lh.googleusercontent.com/8ddL1kuoNUB5vUvgDVjYY3_6HwQcrg1K2fd_R8soD-e2QYj8fT9cfhfh3G0hnSruLKec'
+    const [pickedImage, setPickedImage] = React.useState(image);
+    const _bs = useRef<BottomSheet>(null);
     const _fall = new Animated.Value(1)
+
+    const takePhotoFromCamera = async () => {
+        // Ask the user for the permission to access the camera
+        const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+
+        if (!permissionResult.granted) {
+            alert("You've refused to allow this appp to access your camera!");
+            return;
+        }
+
+        const result = await ImagePicker.launchCameraAsync({allowsEditing: true});
+
+        // Explore the result
+        console.log(result);
+
+        if (!result.cancelled) {
+            setPickedImage(result.uri);
+            // @ts-ignore
+            _bs.current.snapTo(1)
+            console.log(result.uri);
+        }
+    };
+
+    const choosePhotoFromLibrary = async () => {
+        // Ask the user for the permission to access the media library
+        const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+        if (!permissionResult.granted) {
+            alert("You've refused to allow this app to access your photos!");
+            return;
+        }
+
+        const result = await ImagePicker.launchImageLibraryAsync({allowsEditing: true});
+
+        // Explore the result
+        console.log(result);
+
+        if (!result.cancelled) {
+            setPickedImage(result.uri);
+            // @ts-ignore
+            _bs.current.snapTo(1)
+            console.log(result.uri);
+        }
+
+    }
 
     const _renderInner = () => (
         <View style={styles.panel}>
@@ -18,10 +66,10 @@ const EditProfileScreen = () => {
                 <Text style={styles.panelTitle}>Upload Photo</Text>
                 <Text style={styles.panelSubtitle}>Choose Your Profile Picture</Text>
             </View>
-            <TouchableOpacity style={styles.panelButton} onPress={() => {}}>
+            <TouchableOpacity style={styles.panelButton} onPress={takePhotoFromCamera}>
                 <Text style={styles.panelButtonTitle}>Take Photo</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.panelButton} onPress={() => {}}>
+            <TouchableOpacity style={styles.panelButton} onPress={choosePhotoFromLibrary}>
                 <Text style={styles.panelButtonTitle}>Choose From Library</Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -71,7 +119,7 @@ const EditProfileScreen = () => {
                             alignItems: 'center'
                         }}>
                             <ImageBackground source={{
-                                uri: 'https://play-lh.googleusercontent.com/8ddL1kuoNUB5vUvgDVjYY3_6HwQcrg1K2fd_R8soD-e2QYj8fT9cfhfh3G0hnSruLKec'
+                                uri: pickedImage
                             }}
                             style={{height: 100, width: 100}}
                             imageStyle={{borderRadius: 100/2}}
@@ -93,12 +141,12 @@ const EditProfileScreen = () => {
                             </ImageBackground>
                         </View>
                     </TouchableOpacity>
-                    <Text style={{marginTop: 10, fontSize: 18, fontWeight: 'bold'}}>
+                    <Text style={{marginTop: 10, fontSize: 18, fontWeight: 'bold', color: '#fff'}}>
                         Jan Kowalski
                     </Text>
                 </View>
 
-                <View style={styles.action}>
+                <View style={[styles.action, {marginTop: 60}]}>
                     <FontAwesome name="user-o" color={colors.primary} size={20} />
                     <TextInput
                         placeholder="First Name"
@@ -209,9 +257,9 @@ const styles = StyleSheet.create({
     commandButton: {
         padding: 15,
         borderRadius: 10,
-        backgroundColor: '#FF6347',
+        backgroundColor: '#03DAC5',
         alignItems: 'center',
-        marginTop: 10,
+        marginTop: 50,
     },
     panel: {
         padding: 20,
@@ -270,7 +318,7 @@ const styles = StyleSheet.create({
     },
     action: {
         flexDirection: 'row',
-        marginTop: 10,
+        marginTop: 20,
         marginBottom: 10,
         borderBottomWidth: 1,
         borderBottomColor: '#f2f2f2',

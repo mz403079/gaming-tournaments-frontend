@@ -23,6 +23,10 @@
       "bundleIdentifier": "gaming.tournaments",
       "config": {
         "googleMapsApiKey": "process.env['GOOGLE_MAPS_IOS_KEY']"
+      },
+      "infoPlist": {
+        "NSCPhotoLibraryUsageDescription": "GameTournaments requires photo library access.",
+        "NSCameraUsageDescription": "GameTournaments requires camera access to take a photo"
       }
     },
     "android": {
@@ -30,7 +34,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [ "CAMERA", "WRITE_EXTERNAL_STORAGE", "CAMERA_ROLL" ]
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
