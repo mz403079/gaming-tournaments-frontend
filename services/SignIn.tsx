@@ -3,7 +3,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 interface FormData {
   password: string;
   username: string;
-  onSuccess: (...args: any[]) => void;
 }
 const SignInRequest = async (data: FormData) => {
   fetch('https://gen-gg.herokuapp.com/api/auth/signin', {
@@ -24,9 +23,6 @@ const SignInRequest = async (data: FormData) => {
   else {
     console.log("z essą")
       await AsyncStorage.setItem("user", JSON.stringify(data))
-      console.log(data.onSuccess)
-      data.onSuccess()
-
   }
 
 })

@@ -2,17 +2,13 @@ import React from "react";
 import {
   View,
   Text,
-  Button,
-  Dimensions,
   TouchableOpacity,
-  TextInput,
   StyleSheet,
   StatusBar,
-  Platform,
+  Alert,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Animatable from "react-native-animatable";
-import { LinearGradient } from "expo-linear-gradient";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import {
   useFonts,
@@ -34,39 +30,27 @@ import { Feather, FontAwesome } from "@expo/vector-icons";
 import { SignInRequest } from "../services";
 import { InputField } from "../components/UI";
 const SignInScreen = ({ navigation }: { navigation: any }) => {
-   function goHome() {
-    console.log("eeo")
-   }
   function sign() {
-      goHome();
     SignInRequest({
       password: data.password,
       username: data.username,
-      onSuccess: goHome
-    })
-    }
+    });
+    setTimeout(async () => {
+      if (await AsyncStorage.getItem("user")) navigation.navigate("Home");
+      else Alert.alert("Wrong username or password");
+    }, 1000);
+  }
 
   const [data, setData] = React.useState({
     username: "",
     password: "",
-    check_textInputChange: false,
-    secureTextEntry: true,
   });
 
   function textInputChange(val: string) {
-    if (val.length != 0) {
-      setData({
-        ...data,
-        username: val,
-        check_textInputChange: true,
-      });
-    } else {
-      setData({
-        ...data,
-        username: val,
-        check_textInputChange: false,
-      });
-    }
+    setData({
+      ...data,
+      username: val,
+    });
   }
 
   function passwordInputChange(val: string) {
@@ -83,9 +67,10 @@ const SignInScreen = ({ navigation }: { navigation: any }) => {
       </View>
       <Animatable.View animation={"fadeInUpBig"} style={styles.footer}>
         <InputField
-          placeholder="Enter your email"
-          label="Email"
+          placeholder="Enter your username"
+          label="Username"
           onChange={textInputChange}
+          checked={data.username.length > 0}
         >
           <FontAwesome name={"user-o"} color={"#03DAC5"} size={20} />
         </InputField>

@@ -134,6 +134,7 @@ const SignUpScreen = ({ navigation }: { navigation: any }) => {
           label="Username"
           onChange={onChangeUsername}
           errorText={errorMessages.usernameError}
+          checked={errorMessages.usernameError === ""}
         >
           <FontAwesome name={"user-o"} color={"#03DAC5"} size={20} />
         </InputField>
@@ -151,6 +152,7 @@ const SignUpScreen = ({ navigation }: { navigation: any }) => {
           password={true}
           onChange={onChangePassword}
           errorText={errorMessages.passwordError}
+          checked={errorMessages.emailError === ""}
         >
           <FontAwesome name={"lock"} color={"#03DAC5"} size={20} />
         </InputField>
@@ -168,6 +170,7 @@ const SignUpScreen = ({ navigation }: { navigation: any }) => {
           label="Name"
           onChange={onChangeName}
           errorText={errorMessages.nameError}
+          checked={errorMessages.nameError === ""}
         >
           <FontAwesome name={"user-o"} color={"#03DAC5"} size={20} />
         </InputField>
@@ -176,6 +179,7 @@ const SignUpScreen = ({ navigation }: { navigation: any }) => {
           label="Surname"
           onChange={onChangeSurname}
           errorText={errorMessages.surnameError}
+          checked={errorMessages.surnameError === ""}
         >
           <FontAwesome name={"user-o"} color={"#03DAC5"} size={20} />
         </InputField>
