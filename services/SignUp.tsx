@@ -1,6 +1,9 @@
 interface FormData {
+  username: string;
   password: string;
   email: string;
+  name: string;
+  surname: string;
 }
 const SignUp = async (data: FormData) => {
   try {
@@ -13,11 +16,11 @@ const SignUp = async (data: FormData) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          username: "eno",
+          username: data.username,
           plainPassword: data.password,
           email: data.email,
-          name: "Kuba",
-          surname: "Bawoł",
+          name: data.name,
+          surname: data.surname,
         }),
       }
     );

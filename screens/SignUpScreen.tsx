@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -14,7 +14,7 @@ import * as Animatable from "react-native-animatable";
 import { AuthContext } from "../components/context";
 import { LinearGradient } from "expo-linear-gradient";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import InputField from "../components/UI/InputField";
+import { InputField } from "../components/UI";
 import {
   useFonts,
   Roboto_100Thin,
@@ -37,8 +37,11 @@ const SignUpScreen = ({ navigation }: { navigation: any }) => {
   const { signUp } = React.useContext(AuthContext);
   function register() {
     SignUpRequest({
+      username: data.username,
       password: data.password,
       email: data.email,
+      name: data.name,
+      surname: data.surname,
     });
     signUp();
   }
@@ -46,44 +49,79 @@ const SignUpScreen = ({ navigation }: { navigation: any }) => {
     username: "",
     email: "",
     password: "",
+    confirmPassword: "",
     name: "",
     surname: "",
-    confirmPassword: "",
-    check_textInputChange: false,
-    secureTextEntry: true,
-    confirmSecureTextEntry: true,
   });
-
-  function textInputChange(val: string) {
-    if (val.length != 0) {
-      setData({
-        ...data,
-        email: val,
-        check_textInputChange: true,
-      });
-    } else {
-      setData({
-        ...data,
-        email: val,
-        check_textInputChange: false,
-      });
-    }
+  const [errorMessages, setErrorMessages] = React.useState({
+    usernameError: "",
+    emailError: "",
+    passwordError: "",
+    confirmPasswordError: "",
+    nameError: "",
+    surnameError: "",
+  });
+  function validateForm() {
+    const { username, email, password, confirmPassword, name, surname } = data;
+    const emailReg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+    const passwordReg =
+      /^(?=.*[a-z])(?=.*d)(?=.*[#$^+=!*()@%&]).{8,16}$/;
+    setErrorMessages({
+      ...errorMessages,
+      usernameError:
+        username.length > 6 || username.length === 0 ? "" : "Username must be minimum 6 characters",
+      emailError: emailReg.test(email) || email.length === 0 ? "" : "Email is not correct",
+      // COMMENTED FOR SIMPLER TESTING
+      // passwordError: passwordReg.test(password) || password.length === 0
+      //   ? ""
+      //   : "Minimum 1 letter,1 number,1 special character and between 8 and 16 characters",
+      confirmPasswordError:
+        password === confirmPassword || confirmPassword.length === 0 ? "" : "Passwords do not match",
+      nameError: name.length > 0 || name.length === 0 ? "" : "Fill your name",
+      surnameError: surname.length > 0 || surname.length === 0 ? "" : "Fill your surname",
+    });
   }
+  useEffect(() => {
+    validateForm();
+  }, [data]);
 
-  function passwordInputChange(val: string) {
+  function onChangeUsername(val: string) {
+    setData({
+      ...data,
+      username: val,
+    });
+  }
+  function onChangeEmail(val: string) {
+    setData({
+      ...data,
+      email: val,
+    });
+  }
+  function onChangePassword(val: string) {
     setData({
       ...data,
       password: val,
     });
   }
 
-  function confirmPasswordInputChange(val: string) {
+  function onChangeConfirmPassword(val: string) {
     setData({
       ...data,
       confirmPassword: val,
     });
   }
-
+  function onChangeName(val: string) {
+    setData({
+      ...data,
+      name: val,
+    });
+  }
+  function onChangeSurname(val: string) {
+    setData({
+      ...data,
+      surname: val,
+    });
+  }
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor={"#121212"} barStyle="light-content" />
@@ -92,10 +130,18 @@ const SignUpScreen = ({ navigation }: { navigation: any }) => {
       </View>
       <Animatable.View animation={"fadeInUpBig"} style={styles.footer}>
         <InputField
+          placeholder="Enter your username"
+          label="Username"
+          onChange={onChangeUsername}
+          errorText={errorMessages.usernameError}
+        >
+          <FontAwesome name={"user-o"} color={"#03DAC5"} size={20} />
+        </InputField>
+        <InputField
           placeholder="Enter your email"
           label="Email"
-          onChange={textInputChange}
-          checked={data.check_textInputChange}
+          onChange={onChangeEmail}
+          errorText={errorMessages.emailError}
         >
           <FontAwesome name={"user-o"} color={"#03DAC5"} size={20} />
         </InputField>
@@ -103,7 +149,8 @@ const SignUpScreen = ({ navigation }: { navigation: any }) => {
           placeholder="Enter your password"
           label="Password"
           password={true}
-          onChange={passwordInputChange}
+          onChange={onChangePassword}
+          errorText={errorMessages.passwordError}
         >
           <FontAwesome name={"lock"} color={"#03DAC5"} size={20} />
         </InputField>
@@ -111,11 +158,27 @@ const SignUpScreen = ({ navigation }: { navigation: any }) => {
           placeholder="Enter your password"
           label="Confirm password"
           password={true}
-          onChange={confirmPasswordInputChange}
+          onChange={onChangeConfirmPassword}
+          errorText={errorMessages.confirmPasswordError}
         >
           <FontAwesome name={"lock"} color={"#03DAC5"} size={20} />
         </InputField>
-
+        <InputField
+          placeholder="Enter your name"
+          label="Name"
+          onChange={onChangeName}
+          errorText={errorMessages.nameError}
+        >
+          <FontAwesome name={"user-o"} color={"#03DAC5"} size={20} />
+        </InputField>
+        <InputField
+          placeholder="Enter your surname"
+          label="Surname"
+          onChange={onChangeSurname}
+          errorText={errorMessages.surnameError}
+        >
+          <FontAwesome name={"user-o"} color={"#03DAC5"} size={20} />
+        </InputField>
         <View style={styles.button}>
           <TouchableOpacity
             onPress={() => {
@@ -195,36 +258,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontFamily: "Roboto_700Bold",
     fontSize: 40,
-  },
-  text_footer: {
-    color: "#03DAC5",
-    fontSize: 18,
-  },
-  action: {
-    flexDirection: "row",
-    marginTop: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#03DAC5",
-    paddingBottom: 5,
-    paddingTop: 5,
-  },
-  actionError: {
-    flexDirection: "row",
-    marginTop: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#FF0000",
-    paddingBottom: 5,
-  },
-  textInput: {
-    flex: 1,
-    marginTop: Platform.OS === "ios" ? 0 : -12,
-    paddingLeft: 10,
-    color: "#03DAC5",
-    fontSize: 16,
-  },
-  errorMsg: {
-    color: "#FF0000",
-    fontSize: 14,
   },
   button: {
     alignItems: "center",
