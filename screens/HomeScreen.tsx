@@ -50,7 +50,7 @@ type TournamentProps = {
     tournamentId: number,
     tournamentStart: string;
 }
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }) => {
 
     const [isLoading, setLoading] = useState(false);
     const [tournaments, setTournaments] = useState([]);
@@ -120,13 +120,15 @@ const HomeScreen = () => {
 
                     <Text style={{fontSize: 20, fontFamily: 'Roboto_500Medium', color: '#fff'}}>Hello
                         Hasan</Text>
-                    <ImageBackground
-                        source={{
-                            uri: 'https://play-lh.googleusercontent.com/8ddL1kuoNUB5vUvgDVjYY3_6HwQcrg1K2fd_R8soD-e2QYj8fT9cfhfh3G0hnSruLKec'
-                        }}
-                        style={{width: 35, height: 35}}
-                        imageStyle={{borderRadius: 25}}
-                    />
+                    <TouchableOpacity onPress={()=> {navigation.navigate('CreateTournament')}}>
+                        <ImageBackground
+                            source={{
+                                uri: 'https://play-lh.googleusercontent.com/8ddL1kuoNUB5vUvgDVjYY3_6HwQcrg1K2fd_R8soD-e2QYj8fT9cfhfh3G0hnSruLKec'
+                            }}
+                            style={{width: 35, height: 35}}
+                            imageStyle={{borderRadius: 25}}
+                        />
+                    </TouchableOpacity>
                 </View>
                 <View style={{
                     flexDirection: 'row',

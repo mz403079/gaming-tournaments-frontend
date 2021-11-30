@@ -31,6 +31,7 @@ import {DrawerContent} from "./screens/DrawerContent";
 import MapScreen from "./screens/MapScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import MyTicketsScreen from "./screens/MyTicketsScreen";
+import CreateTournament from "./screens/CreateTournament";
 const Drawer = createDrawerNavigator();
 const DrawerNavigator = Drawer.Navigator;
 const App = () => {
@@ -76,6 +77,7 @@ const App = () => {
                     <Drawer.Screen component={MapScreen} name="Map" options={{headerShown: false}}/>
                     <Drawer.Screen component={MyTicketsScreen} name="MyTickets" options={{headerShown: false}}/>
                     <Drawer.Screen component={ProfileScreen} name="Profile" options={{headerShown: false}}/>
+                    <Drawer.Screen component={CreateTournament} name="CreateTournament" options={{headerShown: false}}/>
                 </DrawerNavigator>
                 )
                 :
