@@ -10,7 +10,8 @@ import RankingScreen from "./RankingScreen";
 import ProfileScreen from "./ProfileScreen";
 import MyTicketsScreen from "./MyTicketsScreen";
 import EditProfileScreen from "./EditProfileScreen";
-const HomeStack = createStackNavigator();
+import {createDrawerNavigator} from "@react-navigation/drawer";
+const HomeStack = createDrawerNavigator();
 const ProfileStack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
 const MainTabScreen = () => (
@@ -114,27 +115,12 @@ const RankingStackScreen = ({navigation}: { navigation: any }) => (
     </ProfileStack.Navigator>
 );
 
-// const MapStackScreen = ({navigation}: {navigation: any}) => (
-//     <HomeStack.Navigator screenOptions={{
-//         headerStyle: {
-//             backgroundColor: '#009387',
-//         },
-//         headerTintColor: '#fff',
-//         headerTitleStyle: {
-//             fontWeight: 'bold'
-//         }
-//     }}>
-//         <HomeStack.Screen name="Map" component={MapScreen} options={{
-//             title:'',
-//             headerShown:false
-//         }} />
-//     </HomeStack.Navigator>
-// );
-
 const MyTicketsStackScreen = ({navigation}: { navigation: any }) => (
     <HomeStack.Navigator screenOptions={{
         headerStyle: {
-            backgroundColor: '#009387',
+            backgroundColor: '#121212',
+            shadowColor: '#121212', //ios
+            elevation: 0 //android
         },
         headerTintColor: '#fff',
         headerTitleStyle: {
@@ -144,9 +130,12 @@ const MyTicketsStackScreen = ({navigation}: { navigation: any }) => (
         <HomeStack.Screen name="My Tickets" component={MyTicketsScreen} options={{
             title: 'MyTickets',
             headerLeft: () => (
-                <Icon.Button name="ios-menu" size={25} backgroundColor="#009387"
-                             onPress={() => navigation.openDrawer()}/>
-            )
+                <Icon.Button
+                    name="ios-menu"
+                    size={25}
+                    backgroundColor="#121212"
+                    onPress={() => navigation.openDrawer()}/>
+            ),
         }}/>
     </HomeStack.Navigator>
 );

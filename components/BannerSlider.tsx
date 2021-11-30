@@ -1,5 +1,5 @@
 import React, {FC} from 'react'
-import {View, Text, Image} from 'react-native'
+import {View, Text, Image, TouchableOpacity} from 'react-native'
 import Marker from '../assets/images/marker.svg'
 import moment from 'moment';
 type TournamentProps = {
@@ -17,7 +17,7 @@ type TournamentProps = {
     tournamentStart: string;
 }
 
-const BannerSlider: FC<TournamentProps> = ({name, tournamentStart}) => {
+const BannerSlider: FC<TournamentProps> = ({ name, tournamentStart}) => {
     let momentObj = moment(tournamentStart, 'YYYY-MM-DD h:mm');
     let month = moment(momentObj).format('MMM').toUpperCase();
     let day = moment(momentObj).format('DD').toUpperCase();

@@ -12,6 +12,7 @@ import React, {useEffect, useRef, useState} from "react";
 import Carousel from 'react-native-snap-carousel';
 import {windowWidth} from '../utils/Dimensions'
 import ListItem from '../components/ListItem'
+import TournamentDetailsScreen from '../screens/TournamentDetailsScreen'
 import {
     useFonts,
     Roboto_100Thin,
@@ -71,8 +72,9 @@ const HomeScreen = () => {
     }, []);
 
     const carouselRef = useRef<Carousel<any>>(null)
-    const renderBanner = ({item, index}: { item: TournamentProps, index: any }) => {
-        return <BannerSlider name={item.name}
+    const renderBanner = ({ item, index}: { item: TournamentProps, index: any}) => {
+        return <BannerSlider
+                             name={item.name}
                              currentNumberOfTeams={item.currentNumberOfTeams}
                              description={item.description}
                              lan={item.lan}

@@ -10,18 +10,15 @@ import MapScreen from "./MapScreen";
 import MyTicketsScreen from "./MyTicketsScreen";
 import ProfileScreen from "./ProfileScreen";
 import MainTabScreen from "./MainTabScreen";
+import TournamentDetailsScreen from "./TournamentDetailsScreen";
 
 const RootStack = createStackNavigator();
 
 const RootStackScreen = () => (
     <RootStack.Navigator defaultScreenOptions={{headerShown: false}}>
-        <RootStack.Screen component={MainScreen}        name="Main"             options={{headerShown: false}}/>
-        <RootStack.Screen component={SignInScreen}      name="SignIn"           options={{headerShown: false}}/>
-        <RootStack.Screen component={SignUpScreen}      name="SignUp"           options={{headerShown: false}}/>
-        <RootStack.Screen component={MainTabScreen}     name="Home"             options={{headerShown: false}}/>
-        <RootStack.Screen component={MapScreen}         name="Map"              options={{headerShown: false}}/>
-        <RootStack.Screen component={MyTicketsScreen}   name="MyTickets"        options={{headerShown: false}}/>
-        <RootStack.Screen component={ProfileScreen}     name="Profile"          options={{headerShown: false}}/>
+        <RootStack.Screen component={MainScreen}                name="Main"                     options={{headerShown: false}}/>
+        <RootStack.Screen component={SignInScreen}              name="SignIn"                   options={{headerShown: false}}/>
+        <RootStack.Screen component={SignUpScreen}              name="SignUp"                   options={{headerShown: false}}/>
     </RootStack.Navigator>
 );
 
