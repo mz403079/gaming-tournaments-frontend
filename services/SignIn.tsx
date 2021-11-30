@@ -21,8 +21,10 @@ const SignInRequest = async (data: FormData) => {
     console.log("error")
   }
   else {
-    console.log("z essą")
+    console.log("z essąo")
       await AsyncStorage.setItem("user", JSON.stringify(data))
+      const user = await AsyncStorage.getItem("user")
+      console.log(user)
   }
 
 })

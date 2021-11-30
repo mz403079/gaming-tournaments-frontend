@@ -17,9 +17,8 @@ import {SafeAreaView, StatusBar, Text, TouchableOpacity, View} from "react-nativ
 import {colors} from "../assets/colors/colors";
 import GamingIcon from "../assets/images/Gaming.svg";
 import {MaterialIcons} from "@expo/vector-icons";
-import SignIn from "./SignInScreen";
-
 const MainScreen = ({navigation}: {navigation: any}) => {
+    
     const isLoadingComplete = useCachedResources();
     const colorScheme = useColorScheme();
     let [fontsLoaded] = useFonts({

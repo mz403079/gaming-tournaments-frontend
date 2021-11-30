@@ -36,13 +36,7 @@ import { SignUp as SignUpRequest } from "../services";
 const SignUpScreen = ({ navigation }: { navigation: any }) => {
   const { signUp } = React.useContext(AuthContext);
   function register() {
-    SignUpRequest({
-      username: data.username,
-      password: data.password,
-      email: data.email,
-      name: data.name,
-      surname: data.surname,
-    });
+    SignUpRequest(data);
     signUp();
   }
   const [data, setData] = React.useState({
@@ -64,21 +58,28 @@ const SignUpScreen = ({ navigation }: { navigation: any }) => {
   function validateForm() {
     const { username, email, password, confirmPassword, name, surname } = data;
     const emailReg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-    const passwordReg =
-      /^(?=.*[a-z])(?=.*d)(?=.*[#$^+=!*()@%&]).{8,16}$/;
+    const passwordReg = /^(?=.*[a-z])(?=.*d)(?=.*[#$^+=!*()@%&]).{8,16}$/;
     setErrorMessages({
       ...errorMessages,
       usernameError:
-        username.length > 6 || username.length === 0 ? "" : "Username must be minimum 6 characters",
-      emailError: emailReg.test(email) || email.length === 0 ? "" : "Email is not correct",
+        username.length > 6 || username.length === 0
+          ? ""
+          : "Username must be minimum 6 characters",
+      emailError:
+        emailReg.test(email) || email.length === 0
+          ? ""
+          : "Email is not correct",
       // COMMENTED FOR SIMPLER TESTING
       // passwordError: passwordReg.test(password) || password.length === 0
       //   ? ""
       //   : "Minimum 1 letter,1 number,1 special character and between 8 and 16 characters",
       confirmPasswordError:
-        password === confirmPassword || confirmPassword.length === 0 ? "" : "Passwords do not match",
+        password === confirmPassword || confirmPassword.length === 0
+          ? ""
+          : "Passwords do not match",
       nameError: name.length > 0 || name.length === 0 ? "" : "Fill your name",
-      surnameError: surname.length > 0 || surname.length === 0 ? "" : "Fill your surname",
+      surnameError:
+        surname.length > 0 || surname.length === 0 ? "" : "Fill your surname",
     });
   }
   useEffect(() => {

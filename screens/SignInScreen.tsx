@@ -26,17 +26,16 @@ import {
   Roboto_900Black_Italic,
 } from "@expo-google-fonts/roboto";
 import { Feather, FontAwesome } from "@expo/vector-icons";
-
-import { SignInRequest } from "../services";
+import {AuthContext} from "../components/context";
+import { SignInRequest, GetId } from "../services";
 import { InputField } from "../components/UI";
 const SignInScreen = ({ navigation }: { navigation: any }) => {
+  const {signIn} = React.useContext(AuthContext);
+
   function sign() {
-    SignInRequest({
-      password: data.password,
-      username: data.username,
-    });
+    SignInRequest(data);
     setTimeout(async () => {
-      if (await AsyncStorage.getItem("user")) navigation.navigate("Home");
+      if (await AsyncStorage.getItem("user")) signIn();
       else Alert.alert("Wrong username or password");
     }, 1000);
   }

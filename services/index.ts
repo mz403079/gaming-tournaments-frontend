@@ -1,2 +1,6 @@
 export { default as SignInRequest } from './SignIn'
 export { default as SignUp } from './SignUp'
+export { default as AddTournament } from './AddTournament'
+export { isLogged as IsLogged } from './User'
+export { getId as GetId } from './User'
+export {realId as realId} from './User'
