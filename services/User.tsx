@@ -13,6 +13,7 @@ export async function getId():Promise<number> {
     const user = await AsyncStorage.getItem("user")
     if(user) {
     const  a:User = JSON.parse(user)
+    console.log(a.id)
       return Promise.resolve(a.id) 
   }
   return Promise.resolve(0)

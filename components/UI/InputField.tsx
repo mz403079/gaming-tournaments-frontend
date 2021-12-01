@@ -10,17 +10,21 @@ import {
 import { Feather, FontAwesome } from "@expo/vector-icons";
 import * as Animatable from "react-native-animatable";
 interface InputProps {
-  placeholder: string;
-  icon?: any;
-  checked?: boolean;
-  onChange?: (...args: any[]) => void;
-  label?: string;
-  name?: string;
-  value?: string;
-  helpText?: string;
-  errorText?: string;
-  labelText?: string;
-  password?: boolean;
+  placeholder: string
+  icon?: any
+  checked?: boolean
+  onChange?: (...args: any[]) => void
+  label?: string
+  name?: string
+  value?: string
+  helpText?: string
+  errorText?: string
+  labelText?: string
+  password?: boolean
+  editable?: boolean
+  selectTextOnFocus?: boolean
+  onFocus?: (...args: any[]) => void
+  keyboardType?: string
 }
 
 const InputField: React.FC<InputProps> = (props) => {
@@ -28,12 +32,17 @@ const InputField: React.FC<InputProps> = (props) => {
     children,
     placeholder,
     onChange,
+    onFocus,
     label,
+    value,
     helpText,
     errorText = "",
     labelText,
     checked,
     password = false,
+    editable = true,
+    selectTextOnFocus = true,
+    keyboardType,
     ...rest
   } = props;
   const [secureTextEntry, setSecureTextEntry] = React.useState(password);
@@ -52,9 +61,14 @@ const InputField: React.FC<InputProps> = (props) => {
         <TextInput
           placeholder={placeholder}
           style={styles.textInput}
+          value={value}
+          // editable={editable}
+          // selectTextOnFocus={selectTextOnFocus}
           autoCapitalize="none"
           secureTextEntry={secureTextEntry}
           onChangeText={handleOnChange}
+          onFocus={onFocus}
+          keyboardType={keyboardType}
         />
         {checked ? (
           <Animatable.View animation={"bounceIn"}>
