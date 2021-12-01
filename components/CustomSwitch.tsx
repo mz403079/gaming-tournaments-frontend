@@ -19,8 +19,8 @@ export default function CustomSwitch({
             style={{
                 height: 44,
                 width: '100%',
-                backgroundColor: '#e4e4e4',
-                borderRadius: 10,
+                backgroundColor: '#03DAC5',
+                borderRadius: 20,
                 borderColor: '#AD40AF',
                 flexDirection: 'row',
                 justifyContent: 'center',
@@ -30,13 +30,13 @@ export default function CustomSwitch({
                 onPress={() => updateSwitchData(1)}
                 style={{
                     flex: 1,
-                    backgroundColor: getSelectionMode == 1 ? '#AD40AF' : '#e4e4e4',
-                    borderRadius: 10,
+                    backgroundColor: getSelectionMode == 1? '#03DAC5' : '#303030',
+                    borderRadius: 20,
                     justifyContent: 'center',
                     alignItems: 'center',
                 }}>
                 <Text style={{
-                    color: getSelectionMode == 1? 'white' : '#AD40AF',
+                    color: getSelectionMode == 1? '#121212' : '#03DAC5',
                     fontSize: 14,
                     fontFamily: 'Roboto_500Medium',
                 }}>{option1}</Text>
@@ -46,13 +46,13 @@ export default function CustomSwitch({
                 onPress={() => updateSwitchData(2)}
                 style={{
                     flex: 1,
-                    backgroundColor: getSelectionMode == 2 ? '#AD40AF' : '#e4e4e4',
-                    borderRadius: 10,
+                    backgroundColor: getSelectionMode == 2 ? '#03DAC5' : '#303030',
+                    borderRadius: 20,
                     justifyContent: 'center',
                     alignItems: 'center',
                 }}>
                 <Text style={{
-                    color: getSelectionMode == 2? 'white' : '#AD40AF',
+                    color: getSelectionMode == 2? 'white' : '#03DAC5',
                     fontSize: 14,
                     fontFamily: 'Roboto_500Medium',
                 }}>{option2}</Text>

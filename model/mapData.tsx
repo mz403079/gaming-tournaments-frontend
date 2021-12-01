@@ -5,8 +5,8 @@ const Images = [
 export const markers = [
     {
         coordinate: {
-            latitude: 22.6293867,
-            longitude: 88.4354486,
+            latitude: 51.74721428761974,
+            longitude: 19.453839435253244,
         },
         title: "Bardzo fajny turniej",
         description: "Bardzo fajny turniej",
@@ -14,8 +14,8 @@ export const markers = [
     },
     {
         coordinate: {
-            latitude: 22.6345648,
-            longitude: 88.4377279,
+            latitude: 51.74986073399949,
+            longitude: 19.44840999327929,
         },
         title: "Bardzo fajny turniej 2",
         description: "Bardzo fajny turniej 2",
@@ -25,8 +25,8 @@ export const markers = [
     },
     {
         coordinate: {
-            latitude: 22.6281662,
-            longitude: 88.4410113,
+            latitude: 51.750821888484445,
+            longitude: 19.450603449434016,
         },
         title: "Bardzo fajny turniej 3",
         description: "Bardzo fajny turniej 3",
@@ -36,8 +36,8 @@ export const markers = [
     },
     {
         coordinate: {
-            latitude: 22.6341137,
-            longitude: 88.4497463,
+            latitude: 51.74553374303987,
+            longitude: 19.449961484679314,
         },
         title: "Bardzo fajny turniej 4",
         description: "Bardzo fajny turniej 4",
@@ -47,8 +47,8 @@ export const markers = [
     },
     {
         coordinate: {
-            latitude: 22.6292757,
-            longitude: 88.444781,
+            latitude: 51.763635165993996,
+            longitude: 19.45801159263904,
         },
         title: "Bardzo fajny turniej 5",
         description: "Bardzo fajny turniej 5",

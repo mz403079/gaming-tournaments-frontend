@@ -31,29 +31,29 @@ const MapScreen = () => {
         markers,
         categories: [
             {
-                name: 'Fastfood Center',
-                icon: <MaterialCommunityIcons style={styles.chipsIcon} name="food-fork-drink" size={18}/>,
+                name: 'Rocket League',
+                // icon: <MaterialCommunityIcons style={styles.chipsIcon} name="food-fork-drink" size={18}/>,
             },
             {
-                name: 'Restaurant',
-                icon: <Ionicons name="ios-restaurant" style={styles.chipsIcon} size={18}/>,
+                name: 'CS:GO',
+                // icon: <Ionicons name="ios-restaurant" style={styles.chipsIcon} size={18}/>,
             },
             {
-                name: 'Dineouts',
-                icon: <Ionicons name="md-restaurant" style={styles.chipsIcon} size={18}/>,
+                name: 'League of Legends',
+                // icon: <Ionicons name="md-restaurant" style={styles.chipsIcon} size={18}/>,
             },
             {
-                name: 'Snacks Corner',
-                icon: <MaterialCommunityIcons name="food" style={styles.chipsIcon} size={18}/>,
+                name: 'Valorant',
+                // icon: <MaterialCommunityIcons name="food" style={styles.chipsIcon} size={18}/>,
             },
             {
-                name: 'Hotel',
-                icon: <Fontisto name="hotel" style={styles.chipsIcon} size={15}/>,
+                name: 'Tekken',
+                // icon: <Fontisto name="hotel" style={styles.chipsIcon} size={15}/>,
             },
         ],
         region: {
-            latitude: 22.62938671242907,
-            longitude: 88.4354486029795,
+            latitude: 51.746142068849295,
+            longitude: 19.455375939235186,
             latitudeDelta: 0.04864195044303443,
             longitudeDelta: 0.040142817690068,
         },
@@ -184,7 +184,7 @@ const MapScreen = () => {
                 }}>
                 {state.categories.map((category, index) => (
                     <TouchableOpacity key={index} style={styles.chipsItem}>
-                        {category.icon}
+                        {/*{category.icon}*/}
                         <Text>{category.name}</Text>
                     </TouchableOpacity>
                 ))}

@@ -89,7 +89,9 @@ const HomeScreen = ({ navigation }) => {
     }
     const renderList = ({item, index}: { item: TournamentProps, index: any }) => {
         console.log(item.name);
-        return <ListItem name={item.name}
+        return (
+        <TouchableOpacity onPress={() => {navigation.navigate('CreateTournament')}}>
+        <ListItem name={item.name}
                              currentNumberOfTeams={item.currentNumberOfTeams}
                              description={item.description}
                              lan={item.lan}
@@ -100,7 +102,12 @@ const HomeScreen = ({ navigation }) => {
                              teams={item.teams}
                              tournamentEnd={item.tournamentEnd}
                              tournamentId={item.tournamentId}
-                             tournamentStart={item.tournamentStart}/>
+                             tournamentStart={item.tournamentStart}
+
+
+            />
+        </TouchableOpacity>
+        )
     }
 
     if (isLoading) {

@@ -10,8 +10,7 @@ import RankingScreen from "./RankingScreen";
 import ProfileScreen from "./ProfileScreen";
 import MyTicketsScreen from "./MyTicketsScreen";
 import EditProfileScreen from "./EditProfileScreen";
-import {createDrawerNavigator} from "@react-navigation/drawer";
-const HomeStack = createDrawerNavigator();
+const HomeStack = createStackNavigator();
 const ProfileStack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
 const MainTabScreen = () => (

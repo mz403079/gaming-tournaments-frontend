@@ -13,7 +13,7 @@ import {
 } from '@react-navigation/drawer';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import{ AuthContext } from '../components/context';
-export function DrawerContent(props) {
+export function DrawerContent({props }) {
 
     const paperTheme = useTheme();
 
@@ -51,7 +51,7 @@ export function DrawerContent(props) {
                                 />
                             )}
                             label="Home"
-                            onPress={() => {props.navigation.navigate('Home')}}
+                            onPress={() => { props.navigation.navigate('Home')}}
                         />
                         <DrawerItem
                             labelStyle={{color: '#fff'}}
