@@ -11,7 +11,7 @@ import {
     Dimensions,
     Platform,
 } from "react-native";
-import MapView, {PROVIDER_GOOGLE, Marker} from "react-native-maps";
+import MapView, {PROVIDER_GOOGLE, Marker, MapEvent} from "react-native-maps";
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -60,7 +60,9 @@ const MapScreen = () => {
     };
 
     const [state, setState] = React.useState(initialMapState);
-
+    const onLocationSelect = (event: MapEvent) => {
+        console.log(event.nativeEvent.coordinate);
+    }
 
     let mapIndex = 0;
     let mapAnimation = new Animated.Value(0);
@@ -135,6 +137,7 @@ const MapScreen = () => {
                 style={styles.container}
                 provider={PROVIDER_GOOGLE}
                 customMapStyle={mapDarkStyle}
+                onPress={onLocationSelect}
             >
                 {state.markers.map((marker, index) => {
                     const scaleStyle = {

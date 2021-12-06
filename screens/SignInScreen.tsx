@@ -31,16 +31,28 @@ import { SignInRequest } from "../services";
 import { InputField } from "../components/UI";
 import {AuthContext} from "../components/context";
 
+interface User {
+  token:string
+  type:string
+  id:number
+  username:string
+  email: string
+  roles:string[]
+}
 const SignInScreen = ({ navigation }: { navigation: any }) => {
   const { signIn } = React.useContext(AuthContext);
+
   function sign() {
     SignInRequest({
       password: data.password,
       username: data.username,
     });
     setTimeout(async () => {
-
-      if (await AsyncStorage.getItem("user")) signIn();
+      const user = await AsyncStorage.getItem("user")
+      if (user){
+        const  a:User = JSON.parse(user)
+        signIn(a)
+      }
       else Alert.alert("Wrong username or password");
     }, 1000);
   }
@@ -49,6 +61,7 @@ const SignInScreen = ({ navigation }: { navigation: any }) => {
     username: "",
     password: "",
   });
+
 
   function textInputChange(val: string) {
     setData({
@@ -141,6 +154,17 @@ const SignInScreen = ({ navigation }: { navigation: any }) => {
 };
 
 export default SignInScreen;
+
+export async function getToken():Promise<string> {
+  const user = await AsyncStorage.getItem("user")
+  if(user) {
+    const  a:User = JSON.parse(user)
+    console.log(a.token)
+    return Promise.resolve(a.token)
+  }
+  return Promise.resolve("error")
+
+}
 
 const styles = StyleSheet.create({
   container: {

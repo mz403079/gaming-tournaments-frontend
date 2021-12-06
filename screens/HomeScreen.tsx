@@ -12,6 +12,7 @@ import React, {useEffect, useRef, useState} from "react";
 import Carousel from 'react-native-snap-carousel';
 import {windowWidth} from '../utils/Dimensions'
 import ListItem from '../components/ListItem'
+import SearchBar from '../components/SearchBar'
 import TournamentDetailsScreen from '../screens/TournamentDetailsScreen'
 import {
     useFonts,
@@ -122,20 +123,16 @@ const HomeScreen = ({ navigation }) => {
             <StatusBar barStyle="light-content"/>
             <ScrollView style={{padding: 20}}>
                 <View style={{
-                    flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20,
-                }}>
+                    flexDirection: 'row',
+                    marginBottom: 20,
 
-                    <Text style={{fontSize: 20, fontFamily: 'Roboto_500Medium', color: '#fff'}}>Hello
-                        Hasan</Text>
-                    <TouchableOpacity onPress={()=> {navigation.navigate('CreateTournament')}}>
-                        <ImageBackground
-                            source={{
-                                uri: 'https://play-lh.googleusercontent.com/8ddL1kuoNUB5vUvgDVjYY3_6HwQcrg1K2fd_R8soD-e2QYj8fT9cfhfh3G0hnSruLKec'
-                            }}
-                            style={{width: 35, height: 35}}
-                            imageStyle={{borderRadius: 25}}
-                        />
-                    </TouchableOpacity>
+                }}>
+                    <View style={{
+                        flexDirection: 'row', alignItems: 'center'}}>
+                    <SearchBar navigation={navigation}>
+
+                    </SearchBar>
+                    </View>
                 </View>
                 <View style={{
                     flexDirection: 'row',
@@ -153,7 +150,7 @@ const HomeScreen = ({ navigation }) => {
                     flexDirection: 'row',
                     justifyContent: 'space-between'
                 }}>
-                    <Text style={{fontSize: 18, fontFamily: 'Roboto_500Medium', color: '#fff'}}> Upcoming
+                    <Text style={{fontSize: 18, fontFamily: 'Roboto_500Medium', color: '#fff'}}>Upcoming
                         Events</Text>
                     <TouchableOpacity onPress={() => {
                     }}>

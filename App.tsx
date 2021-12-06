@@ -32,15 +32,24 @@ import MapScreen from "./screens/MapScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import MyTicketsScreen from "./screens/MyTicketsScreen";
 import CreateTournament from "./screens/CreateTournament";
+import SearchBar from "./components/SearchBar";
 const Drawer = createDrawerNavigator();
 const DrawerNavigator = Drawer.Navigator;
+interface User {
+    token:string
+    type:string
+    id:number
+    username:string
+    email: string
+    roles:string[]
+}
 const App = () => {
     const [isLoading, setIsLoading] = React.useState(true);
     const [userToken, setUserToken] = React.useState<any>(null);
 
     const authContext = React.useMemo(() => ({
-        signIn: () => {
-            setUserToken('xyz');
+        signIn: (user: User) => {
+            setUserToken(user.token);
             setIsLoading(false);
         },
         signOut: () => {
@@ -48,10 +57,10 @@ const App = () => {
             setIsLoading(false);
             AsyncStorage.removeItem("user");
         },
-        signUp: () => {
-            setUserToken('xyz');
-            setIsLoading(false);
-        }
+        // signUp: () => {
+        //     setUserToken('xyz');
+        //     setIsLoading(false);
+        // }
     }), []);
     useEffect(() => {
         setTimeout(() => {
@@ -78,6 +87,7 @@ const App = () => {
                     <Drawer.Screen component={MyTicketsScreen} name="MyTickets" options={{headerShown: false}}/>
                     <Drawer.Screen component={ProfileScreen} name="Profile" options={{headerShown: false}}/>
                     <Drawer.Screen component={CreateTournament} name="CreateTournament" options={{headerShown: false}}/>
+                    <Drawer.Screen component={SearchBar} name="SearchBar" options={{headerShown: false}}/>
                 </DrawerNavigator>
                 )
                 :
