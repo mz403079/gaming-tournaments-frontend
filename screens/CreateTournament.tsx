@@ -57,6 +57,27 @@ const CreateTournament = () => {
     nameError: "",
     surnameError: "",
   });
+  function submitForm() {
+    let {tournamentEnd, tournamentStart} = data
+    let stringEnd = tournamentEnd.getFullYear() + "-" + (tournamentEnd.getMonth() + 1) + "-" + tournamentEnd.getDay();
+    let stringStart = tournamentStart.getFullYear() + "-" + (tournamentStart.getMonth() + 1) + "-" + tournamentStart.getDay()
+    + " " + tournamentStart.getHours() + ":" + tournamentStart.getMinutes();
+    
+    AddTournament({
+      name:data.name,
+      description:data.description,
+      maxTeamSize:data.maxTeamSize,
+      maxNumberOfTeams:data.maxNumberOfTeams,
+      reward:data.reward,
+      isLan:data.isLan,
+      city:data.city,
+      street:data.street,
+      regulations:data.regulations,
+      organizer:data.organizer,
+      tournamentStart:stringStart,
+      tournamentEnd:stringEnd,
+    })
+  }
   // function validateForm() {
   //   const { username, email, password, confirmPassword, name, surname } = data;
   //   const emailReg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
@@ -92,6 +113,7 @@ const CreateTournament = () => {
   const [showStartDate, setShowStartDate] = useState(false);
   const [showEndDate, setShowEndDate] = useState(false);
   const onChangeTournamentStart = (event, selectedDate) => {
+    console.log(data.tournamentStart)
     const currentDate = selectedDate || date;
     setShowStartDate(Platform.OS === "ios");
     setData({
@@ -107,13 +129,18 @@ const CreateTournament = () => {
       tournamentEnd: currentDate,
     });
   };
-  const showMode = (currentMode) => {
-    setShowEndDate(true);
-    setMode(currentMode);
-  };
 
-  const showDatepicker = () => {
-    showMode("date");
+  const showDatepickerStart = () => {
+    setShowStartDate(true);
+    setMode('date');
+  };
+  const showDatepickerEnd = () => {
+    setShowEndDate(true);
+    setMode('date');
+  };
+  const showTimer = () => {
+    setShowStartDate(true);
+    setMode('time');
   };
   function onChangeName(val: string) {
     setData({
@@ -172,9 +199,15 @@ const CreateTournament = () => {
   }
   function formatDate(val: Date) {
     var day = val.getDate();
-    var month = val.getMonth();
+    var month = val.getMonth() + 1;
     var year = val.getFullYear();
     return day + "-" + month + "-" + year;
+  }
+  
+  function formatHour(val: Date) {
+    var hour = val.getHours();
+    var minutes = val.getMinutes();
+    return hour + ":" + ("0" + minutes).slice(-2);
   }
   return (
     <View style={styles.container}>
@@ -192,7 +225,7 @@ const CreateTournament = () => {
           ></InputField>
 
           <InputField
-            onFocus={showDatepicker}
+            onFocus={showDatepickerStart}
             placeholder="Enter tournament date"
             label="Tournament start"
             value={formatDate(data.tournamentStart)}
@@ -201,7 +234,22 @@ const CreateTournament = () => {
           >
             <FontAwesome
               name={"calendar-check-o"}
-              onPress={showDatepicker}
+              onPress={showDatepickerStart}
+              color={"#03DAC5"}
+              size={20}
+            />
+          </InputField>
+          <InputField
+            onFocus={showTimer}
+            placeholder="Enter tournament starting hour"
+            label="Tournament starting hour"
+            value={formatHour(data.tournamentStart)}
+            editable={false}
+            selectTextOnFocus={false}
+          >
+            <FontAwesome
+              name={"calendar-check-o"}
+              onPress={showTimer}
               color={"#03DAC5"}
               size={20}
             />
@@ -218,7 +266,7 @@ const CreateTournament = () => {
           )}
 
           <InputField
-            onFocus={showDatepicker}
+            onFocus={showDatepickerEnd}
             placeholder="Enter tournament end date"
             label="Tournament end"
             value={formatDate(data.tournamentEnd)}
@@ -227,7 +275,7 @@ const CreateTournament = () => {
           >
             <FontAwesome
               name={"calendar-check-o"}
-              onPress={showDatepicker}
+              onPress={showDatepickerEnd}
               color={"#03DAC5"}
               size={20}
             />
@@ -276,7 +324,7 @@ const CreateTournament = () => {
           ></InputField>
           <View style={styles.button}>
             <TouchableOpacity
-              onPress={() => {AddTournament(data)}}
+              onPress={submitForm}
               style={[
                 styles.signIn,
                 {

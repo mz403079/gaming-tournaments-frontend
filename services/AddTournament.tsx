@@ -3,9 +3,9 @@ interface UserData {
 }
 interface FormData {
     name: string
-    tournamentStart: Date
+    tournamentStart: string
     description?: string
-    tournamentEnd: Date
+    tournamentEnd: string
     maxTeamSize: number
     maxNumberOfTeams: number
     reward: number
@@ -19,6 +19,7 @@ interface FormData {
   }
   const AddTournament = async (data: FormData) => {
     try {
+      console.log("addin")
       const response = await fetch(
         "https://gen-gg.herokuapp.com/api/addTournament",
         {
