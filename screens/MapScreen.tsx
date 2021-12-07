@@ -1,4 +1,4 @@
-import React, { useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {
     StyleSheet,
     Text,
@@ -27,6 +27,7 @@ const CARD_WIDTH = width * 0.8;
 const SPACING_FOR_CARD_INSET = width * 0.1 - 10;
 
 const MapScreen = () => {
+    const [shouldShow, setShouldShow] = useState(true);
     const initialMapState = {
         markers,
         categories: [
@@ -116,16 +117,23 @@ const MapScreen = () => {
     const _map = React.useRef(null);
 
     const onMarkerPress = (mapEventData) => {
-        const markerID = mapEventData._targetInst.return.index;
+        setShouldShow(true)
+        setTimeout( () => {
+            const markerID = mapEventData._targetInst.return.index;
+            let x = (markerID * CARD_WIDTH) + (markerID * 20);
+            if (Platform.OS === 'ios') {
+                x = x - SPACING_FOR_CARD_INSET;
+            }
+            // @ts-ignore
+            _scrollView.current.scrollTo(({x: x, y: 0, animated: false}));
+        }, 500)
+    }
 
-        let x = (markerID * CARD_WIDTH) + (markerID * 20);
-        if (Platform.OS === 'ios') {
-            x = x - SPACING_FOR_CARD_INSET;
-        }
 
-
-        // @ts-ignore
-        _scrollView.current.scrollTo(({x: x, y: 0, animated: false}));
+    const onMapPress = (event: any) => {
+        setShouldShow(false)
+        setTimeout( () => {
+        }, 500)
     }
     const _scrollView = React.useRef(null);
 
@@ -137,7 +145,7 @@ const MapScreen = () => {
                 style={styles.container}
                 provider={PROVIDER_GOOGLE}
                 customMapStyle={mapDarkStyle}
-                onPress={onLocationSelect}
+                onPress={(e) => onMapPress(e)}
             >
                 {state.markers.map((marker, index) => {
                     const scaleStyle = {
@@ -170,29 +178,29 @@ const MapScreen = () => {
                 <Ionicons name={"ios-search"} size={20}
                     style={{marginRight: 10, display: 'flex', alignSelf:'center'}}/>
             </View>
-            <ScrollView
-                horizontal
-                scrollEventThrottle={1}
-                showsHorizontalScrollIndicator={false}
-                height={50}
-                style={styles.chipsScrollView}
-                contentInset={{ //iOS only
-                    top: 0,
-                    left: 0,
-                    bottom: 0,
-                    right: 20
-                }}
-                contentContainerStyle={{
-                    paddingRight: Platform.OS == 'android' ? 20 : 0
-                }}>
-                {state.categories.map((category, index) => (
-                    <TouchableOpacity key={index} style={styles.chipsItem}>
-                        {/*{category.icon}*/}
-                        <Text>{category.name}</Text>
-                    </TouchableOpacity>
-                ))}
-            </ScrollView>
-                <Animated.ScrollView
+            {shouldShow ? (
+                <><ScrollView
+                    horizontal
+                    scrollEventThrottle={1}
+                    showsHorizontalScrollIndicator={false}
+                    height={50}
+                    style={styles.chipsScrollView}
+                    contentInset={{
+                        top: 0,
+                        left: 0,
+                        bottom: 0,
+                        right: 20
+                    }}
+                    contentContainerStyle={{
+                        paddingRight: Platform.OS == 'android' ? 20 : 0
+                    }}>
+                    {state.categories.map((category, index) => (
+                        <TouchableOpacity key={index} style={styles.chipsItem}>
+                            {/*{category.icon}*/}
+                            <Text>{category.name}</Text>
+                        </TouchableOpacity>
+                    ))}
+                </ScrollView><Animated.ScrollView
                     ref={_scrollView}
                     horizontal
                     scrollEventThrottle={1}
@@ -208,7 +216,7 @@ const MapScreen = () => {
                         right: SPACING_FOR_CARD_INSET
                     }}
                     contentContainerStyle={{
-                        paddingHorizontal: Platform.OS == 'android' ? SPACING_FOR_CARD_INSET: 0
+                        paddingHorizontal: Platform.OS == 'android' ? SPACING_FOR_CARD_INSET : 0
                     }}
                     onScroll={Animated.event(
                         [
@@ -219,7 +227,7 @@ const MapScreen = () => {
                                     }
                                 },
                             },
-                        ],
+                        ]
                     )}>
                     {state.markers.map((marker, index) => (
                         <View style={styles.card} key={index}>
@@ -233,7 +241,8 @@ const MapScreen = () => {
                             </View>
                         </View>
                     ))}
-                </Animated.ScrollView>
+                </Animated.ScrollView></>
+                ) : <></>}
         </View>
 )};
 
