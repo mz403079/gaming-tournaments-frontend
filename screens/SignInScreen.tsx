@@ -51,6 +51,7 @@ const SignInScreen = ({ navigation }: { navigation: any }) => {
       const user = await AsyncStorage.getItem("user")
       if (user){
         const  a:User = JSON.parse(user)
+        console.log(a)
         signIn(a)
       }
       else Alert.alert("Wrong username or password");

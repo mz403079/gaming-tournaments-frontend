@@ -10,10 +10,9 @@ const SignInRequest = async (data: FormData) => {
   headers: {
     'Content-Type': 'application/json',
   },
-  body: JSON.stringify({
-    username: data.username,
-    plainPassword: data.password,
-  }),
+  body: JSON.stringify(
+   data
+  ),
 })
 .then(response => response.json())
 .then(async data => {

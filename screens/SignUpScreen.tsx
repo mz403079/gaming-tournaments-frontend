@@ -11,7 +11,6 @@ import {
   Platform,
 } from "react-native";
 import * as Animatable from "react-native-animatable";
-import { AuthContext } from "../components/context";
 import { LinearGradient } from "expo-linear-gradient";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { InputField } from "../components/UI";
@@ -31,10 +30,19 @@ import {
   Roboto_900Black_Italic,
 } from "@expo-google-fonts/roboto";
 import { Feather, FontAwesome } from "@expo/vector-icons";
-import { SignUp as SignUpRequest } from "../services";
-
+import { SignUpRequest, SignInRequest } from "../services";
+import {AuthContext} from "../components/context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+interface User {
+  token:string
+  type:string
+  id:number
+  username:string
+  email: string
+  roles:string[]
+}
 const SignUpScreen = ({ navigation }: { navigation: any }) => {
-  const { signUp } = React.useContext(AuthContext);
+  const { signIn } = React.useContext(AuthContext);
   function register() {
     SignUpRequest({
       username: data.username,
@@ -42,8 +50,20 @@ const SignUpScreen = ({ navigation }: { navigation: any }) => {
       email: data.email,
       name: data.name,
       surname: data.surname,
+    }).then(() => {
+      SignInRequest({
+        password: data.password,
+        username: data.username,
+      });
+      setTimeout(async () => {
+        const user = await AsyncStorage.getItem("user")
+        if (user){
+          const  a:User = JSON.parse(user)
+          signIn(a)
+        }
+      }, 1000);
     });
-    signUp();
+   
   }
   const [data, setData] = React.useState({
     username: "",
