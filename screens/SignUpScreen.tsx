@@ -52,7 +52,7 @@ const SignUpScreen = ({ navigation }: { navigation: any }) => {
       surname: data.surname,
     }).then(() => {
       SignInRequest({
-        password: data.password,
+        plainPassword: data.password,
         username: data.username,
       });
       setTimeout(async () => {
