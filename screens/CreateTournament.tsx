@@ -17,9 +17,6 @@ import { AddTournament, GetId } from "../services";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { FontAwesome } from "@expo/vector-icons";
 import { ScrollView } from "react-native-gesture-handler";
-interface UserData {
-  userId: number;
-}
 
 const CreateTournament = () => {
   const [user, setUser] = useState({
@@ -29,7 +26,6 @@ const CreateTournament = () => {
   useEffect(() => {
     GetId().then(function (res) {
       setUser({
-        ...data,
         userId: res,
       });
     });
@@ -62,7 +58,7 @@ const CreateTournament = () => {
     let stringEnd = tournamentEnd.getFullYear() + "-" + (tournamentEnd.getMonth() + 1) + "-" + tournamentEnd.getDay();
     let stringStart = tournamentStart.getFullYear() + "-" + (tournamentStart.getMonth() + 1) + "-" + tournamentStart.getDay()
     + " " + tournamentStart.getHours() + ":" + tournamentStart.getMinutes();
-    
+
     AddTournament({
       name:data.name,
       description:data.description,
@@ -73,7 +69,7 @@ const CreateTournament = () => {
       city:data.city,
       street:data.street,
       regulations:data.regulations,
-      organizer:data.organizer,
+      organizer:user,
       tournamentStart:stringStart,
       tournamentEnd:stringEnd,
     })

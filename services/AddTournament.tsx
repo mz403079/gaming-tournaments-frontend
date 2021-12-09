@@ -19,7 +19,6 @@ interface FormData {
   }
   const AddTournament = async (data: FormData) => {
     try {
-      console.log("addin")
       const response = await fetch(
         "https://gen-gg.herokuapp.com/api/addTournament",
         {

@@ -44,8 +44,8 @@ const SignInScreen = ({ navigation }: { navigation: any }) => {
 
   function sign() {
     SignInRequest({
-      password: data.password,
       username: data.username,
+      plainPassword: data.password, 
     });
     setTimeout(async () => {
       const user = await AsyncStorage.getItem("user")

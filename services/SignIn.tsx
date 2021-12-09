@@ -1,8 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface FormData {
-  password: string;
   username: string;
+  plainPassword: string;
 }
 const SignInRequest = async (data: FormData) => {
   fetch('https://gen-gg.herokuapp.com/api/auth/signin', {
@@ -17,10 +17,8 @@ const SignInRequest = async (data: FormData) => {
 .then(response => response.json())
 .then(async data => {
   if(data.status && data.status !== 200) {
-    console.log("error")
   }
   else {
-    console.log("z essą")
       await AsyncStorage.setItem("user", JSON.stringify(data))
   }
 
