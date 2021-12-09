@@ -46,70 +46,89 @@ const CreateTournament = () => {
     organizer: user,
   });
   const [errorMessages, setErrorMessages] = React.useState({
-    usernameError: "",
-    emailError: "",
-    passwordError: "",
-    confirmPasswordError: "",
     nameError: "",
-    surnameError: "",
+    maxTeamSizeError: "",
+    maxNumberOfTeamsError: "",
+    rewardError: "",
+    cityError: "",
+    streetError: "",
+    tournamentStartError: "",
+    tournamentEndError: "",
   });
   function submitForm() {
-    let {tournamentEnd, tournamentStart} = data
-    let stringEnd = tournamentEnd.getFullYear() + "-" + (tournamentEnd.getMonth() + 1) + "-" + tournamentEnd.getDay();
-    let stringStart = tournamentStart.getFullYear() + "-" + (tournamentStart.getMonth() + 1) + "-" + tournamentStart.getDay()
-    + " " + tournamentStart.getHours() + ":" + tournamentStart.getMinutes();
+    let { tournamentEnd, tournamentStart } = data;
+    let stringEnd =
+      tournamentEnd.getFullYear() +
+      "-" +
+      (tournamentEnd.getMonth() + 1) +
+      "-" +
+      tournamentEnd.getDay();
+    let stringStart =
+      tournamentStart.getFullYear() +
+      "-" +
+      (tournamentStart.getMonth() + 1) +
+      "-" +
+      tournamentStart.getDay() +
+      " " +
+      tournamentStart.getHours() +
+      ":" +
+      tournamentStart.getMinutes();
 
     AddTournament({
-      name:data.name,
-      description:data.description,
-      maxTeamSize:data.maxTeamSize,
-      maxNumberOfTeams:data.maxNumberOfTeams,
-      reward:data.reward,
-      isLan:data.isLan,
-      city:data.city,
-      street:data.street,
-      regulations:data.regulations,
-      organizer:user,
-      tournamentStart:stringStart,
-      tournamentEnd:stringEnd,
-    })
+      name: data.name,
+      description: data.description,
+      maxTeamSize: data.maxTeamSize,
+      maxNumberOfTeams: data.maxNumberOfTeams,
+      reward: data.reward,
+      isLan: data.isLan,
+      city: data.city,
+      street: data.street,
+      regulations: data.regulations,
+      organizer: user,
+      tournamentStart: stringStart,
+      tournamentEnd: stringEnd,
+    });
   }
-  // function validateForm() {
-  //   const { username, email, password, confirmPassword, name, surname } = data;
-  //   const emailReg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-  //   const passwordReg = /^(?=.*[a-z])(?=.*d)(?=.*[#$^+=!*()@%&]).{8,16}$/;
-  //   setErrorMessages({
-  //     ...errorMessages,
-  //     usernameError:
-  //       username.length > 6 || username.length === 0
-  //         ? ""
-  //         : "Username must be minimum 6 characters",
-  //     emailError:
-  //       emailReg.test(email) || email.length === 0
-  //         ? ""
-  //         : "Email is not correct",
-  //     // COMMENTED FOR SIMPLER TESTING
-  //     // passwordError: passwordReg.test(password) || password.length === 0
-  //     //   ? ""
-  //     //   : "Minimum 1 letter,1 number,1 special character and between 8 and 16 characters",
-  //     confirmPasswordError:
-  //       password === confirmPassword || confirmPassword.length === 0
-  //         ? ""
-  //         : "Passwords do not match",
-  //     nameError: name.length > 0 || name.length === 0 ? "" : "Fill your name",
-  //     surnameError:
-  //       surname.length > 0 || surname.length === 0 ? "" : "Fill your surname",
-  //   });
-  // }
-  // useEffect(() => {
-  //   validateForm();
-  // }, [data]);
+  function validateForm() {
+    const {
+      name,
+      maxTeamSize,
+      maxNumberOfTeams,
+      tournamentStart,
+      tournamentEnd,
+      reward,
+      isLan,
+      city,
+      street,
+      regulations,
+    } = data;
+    setErrorMessages({
+      ...errorMessages,
+      nameError: name.length > 0 ? "" : "This field is required",
+      maxTeamSizeError:
+        maxTeamSize > 0 ? "" : "Teams must consist of at least one player",
+      maxNumberOfTeamsError:
+        maxNumberOfTeams > 1 ? "" : "At least two team slots are required",
+      rewardError:
+        reward >= 0 ? "" : "Add some reward",
+      cityError: city.length > 0 ? "" : "This field is required",
+      tournamentEndError:
+        tournamentEnd >= tournamentStart ? "" : "Tournament end must come after tournament start",
+      tournamentStartError:
+        tournamentStart >= new Date() ? "" : "Tournament can't take place in the past",  
+      streetError: street.length > 0 ? "" : "This field is required",
+    });
+  }
+  useEffect(() => {
+    validateForm();
+  }, [data]);
+
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState("date");
   const [showStartDate, setShowStartDate] = useState(false);
   const [showEndDate, setShowEndDate] = useState(false);
   const onChangeTournamentStart = (event, selectedDate) => {
-    console.log(data.tournamentStart)
+    console.log(data.tournamentStart);
     const currentDate = selectedDate || date;
     setShowStartDate(Platform.OS === "ios");
     setData({
@@ -128,15 +147,15 @@ const CreateTournament = () => {
 
   const showDatepickerStart = () => {
     setShowStartDate(true);
-    setMode('date');
+    setMode("date");
   };
   const showDatepickerEnd = () => {
     setShowEndDate(true);
-    setMode('date');
+    setMode("date");
   };
   const showTimer = () => {
     setShowStartDate(true);
-    setMode('time');
+    setMode("time");
   };
   function onChangeName(val: string) {
     setData({
@@ -144,7 +163,18 @@ const CreateTournament = () => {
       name: val,
     });
   }
+  function formatDate(val: Date) {
+    var day = val.getDate();
+    var month = val.getMonth() + 1;
+    var year = val.getFullYear();
+    return day + "-" + month + "-" + year;
+  }
 
+  function formatHour(val: Date) {
+    var hour = val.getHours();
+    var minutes = val.getMinutes();
+    return hour + ":" + ("0" + minutes).slice(-2);
+  }
   function onChangeDescription(val: string) {
     setData({
       ...data,
@@ -193,18 +223,7 @@ const CreateTournament = () => {
       regulations: val,
     });
   }
-  function formatDate(val: Date) {
-    var day = val.getDate();
-    var month = val.getMonth() + 1;
-    var year = val.getFullYear();
-    return day + "-" + month + "-" + year;
-  }
-  
-  function formatHour(val: Date) {
-    var hour = val.getHours();
-    var minutes = val.getMinutes();
-    return hour + ":" + ("0" + minutes).slice(-2);
-  }
+
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor={"#121212"} barStyle="light-content" />
@@ -218,6 +237,8 @@ const CreateTournament = () => {
             placeholder="Enter tournament name"
             label="Name"
             onChange={onChangeName}
+            errorText={errorMessages.nameError}
+            checked={errorMessages.nameError === ""}
           ></InputField>
 
           <InputField
@@ -227,6 +248,8 @@ const CreateTournament = () => {
             value={formatDate(data.tournamentStart)}
             editable={false}
             selectTextOnFocus={false}
+            errorText={errorMessages.tournamentStartError}
+            checked={errorMessages.tournamentStartError === ""}
           >
             <FontAwesome
               name={"calendar-check-o"}
@@ -268,6 +291,8 @@ const CreateTournament = () => {
             value={formatDate(data.tournamentEnd)}
             editable={false}
             selectTextOnFocus={false}
+            errorText={errorMessages.tournamentEndError}
+            checked={errorMessages.tournamentEndError === ""}
           >
             <FontAwesome
               name={"calendar-check-o"}
@@ -296,22 +321,38 @@ const CreateTournament = () => {
             label="Team size"
             keyboardType="number-pad"
             onChange={onChangeMaxTeamSize}
+            errorText={errorMessages.maxTeamSizeError}
+            checked={errorMessages.maxTeamSizeError === ""}
           ></InputField>
           <InputField
             placeholder="Maximum number of teams"
             label="Team limit"
             keyboardType="number-pad"
-            onChange={onChangeMaxTeamSize}
+            onChange={onChangeMaxNumberOfTeams}
+            errorText={errorMessages.maxNumberOfTeamsError}
+            checked={errorMessages.maxNumberOfTeamsError === ""}
+          ></InputField>
+          <InputField
+            placeholder="5 crowns"
+            label="Winner's prize"
+            keyboardType="number-pad"
+            onChange={onChangeReward}
+            errorText={errorMessages.rewardError}
+            checked={errorMessages.rewardError === ""}
           ></InputField>
           <InputField
             placeholder="City"
             label="City"
             onChange={onChangeCity}
+            errorText={errorMessages.cityError}
+            checked={errorMessages.cityError === ""}
           ></InputField>
           <InputField
             placeholder="Street"
             label="Street"
             onChange={onChangeStreet}
+            errorText={errorMessages.streetError}
+            checked={errorMessages.streetError === ""}
           ></InputField>
           <InputField
             placeholder="Rules"

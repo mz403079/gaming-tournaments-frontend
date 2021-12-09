@@ -172,7 +172,6 @@ const SignUpScreen = ({ navigation }: { navigation: any }) => {
           password={true}
           onChange={onChangePassword}
           errorText={errorMessages.passwordError}
-          checked={errorMessages.emailError === ""}
         >
           <FontAwesome name={"lock"} color={"#03DAC5"} size={20} />
         </InputField>
