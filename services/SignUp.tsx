@@ -6,28 +6,23 @@ interface FormData {
   surname: string;
 }
 const SignUp = async (data: FormData) => {
-  try {
-    const response = await fetch(
-      "https://gen-gg.herokuapp.com/api/auth/signup",
-      {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: data.username,
-          plainPassword: data.password,
-          email: data.email,
-          name: data.name,
-          surname: data.surname,
-        }),
+  fetch("https://gen-gg.herokuapp.com/api/auth/signup", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  })
+    .then((response) => response.json())
+    .then(async (data) => {
+      if (data.status && data.status !== 200) {
+        console.log("error");
+      } else {
+        console.log("z essą");
       }
-    );
-    const json = await response.json();
-  } catch (error) {
-    console.error(error);
-  }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
 };
-
 export default SignUp;

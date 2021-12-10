@@ -3,9 +3,9 @@ interface UserData {
 }
 interface FormData {
     name: string
-    tournamentStart: Date
+    tournamentStart: string
     description?: string
-    tournamentEnd: Date
+    tournamentEnd: string
     maxTeamSize: number
     maxNumberOfTeams: number
     reward: number
