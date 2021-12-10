@@ -1,5 +1,5 @@
 import {Text, View, StyleSheet, SafeAreaView} from "react-native";
-import React from "react";
+import React, {useState, useEffect} from "react";
 import {Avatar, Title, Caption, TouchableRipple} from 'react-native-paper'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
