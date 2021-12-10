@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useRef, useState, useEffect} from 'react';
 import {ImageBackground, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -8,8 +8,31 @@ import Animated from 'react-native-reanimated';
 import * as ImagePicker from 'expo-image-picker';
 import {colors} from "../assets/colors/colors";
 import {UIImagePickerPresentationStyle} from "expo-image-picker/build/ImagePicker.types";
+import { GetUserInfo, GetId } from "../services";
 
+interface Contact {
+    emailAddress: string;
+    phoneNumber: string;
+    discordName: string;
+}
+interface User {
+    name: string;
+    surname: string;
+    contact: Contact;
+}
 const EditProfileScreen = () => {
+    const [user, setUser] = useState<User>()
+    const [userId, setUserId] = useState<number>(0)
+    
+    useEffect(() => {
+        GetId().then(function (res) {
+            setUserId(res);
+          });
+        GetUserInfo(1).then(function (res) {
+            setUser(res)
+        })
+      }, []);
+    
     const image = 'https://play-lh.googleusercontent.com/8ddL1kuoNUB5vUvgDVjYY3_6HwQcrg1K2fd_R8soD-e2QYj8fT9cfhfh3G0hnSruLKec'
     const [pickedImage, setPickedImage] = React.useState(image);
     const _bs = useRef<BottomSheet>(null);
@@ -149,7 +172,7 @@ const EditProfileScreen = () => {
                 <View style={[styles.action, {marginTop: 60}]}>
                     <FontAwesome name="user-o" color={colors.primary} size={20} />
                     <TextInput
-                        placeholder="First Name"
+                        placeholder={user?.name}
                         placeholderTextColor="#666666"
                         autoCorrect={false}
                         style={[
@@ -164,7 +187,7 @@ const EditProfileScreen = () => {
                 <View style={styles.action}>
                     <FontAwesome name="user-o" color={colors.primary} size={20} />
                     <TextInput
-                        placeholder="Last Name"
+                        placeholder={user?.surname}
                         placeholderTextColor="#666666"
                         autoCorrect={false}
                         style={[
@@ -179,7 +202,7 @@ const EditProfileScreen = () => {
                 <View style={styles.action}>
                     <Feather name="phone" color={colors.primary} size={20} />
                     <TextInput
-                        placeholder="Phone"
+                        placeholder={user?.contact.phoneNumber}
                         placeholderTextColor="#666666"
                         keyboardType="number-pad"
                         autoCorrect={false}
@@ -195,7 +218,7 @@ const EditProfileScreen = () => {
                 <View style={styles.action}>
                     <FontAwesome name="envelope-o" color={colors.primary} size={20} />
                     <TextInput
-                        placeholder="Email"
+                        placeholder={user?.contact.emailAddress}
                         placeholderTextColor="#666666"
                         keyboardType="email-address"
                         autoCorrect={false}
