@@ -9,18 +9,18 @@ import {
     Image,
     TouchableOpacity,
     Dimensions,
-    Platform,
+    Platform, ImageBackground, Alert,
 } from "react-native";
-import MapView, {PROVIDER_GOOGLE, Marker, MapEvent} from "react-native-maps";
-
+import MapView, {PROVIDER_GOOGLE, Marker, MapEvent, Callout} from "react-native-maps";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Fontisto from 'react-native-vector-icons/Fontisto';
-
+import ActionButton from 'react-native-action-button';
 import { markers, mapDarkStyle} from '../model/mapData';
-
+import Icon from 'react-native-vector-icons/Ionicons';
 import { useTheme } from '@react-navigation/native';
-
+import * as ImagePicker from "expo-image-picker";
+import * as Location from 'expo-location';
 const { width, height } = Dimensions.get("window");
 const CARD_HEIGHT = 220;
 const CARD_WIDTH = width * 0.8;
@@ -28,6 +28,9 @@ const SPACING_FOR_CARD_INSET = width * 0.1 - 10;
 
 const MapScreen = () => {
     const [shouldShow, setShouldShow] = useState(true);
+    const [location, setLocation] = useState(null);
+    const [errorMsg, setErrorMsg] = useState(null);
+
     const initialMapState = {
         markers,
         categories: [
@@ -68,7 +71,20 @@ const MapScreen = () => {
     let mapIndex = 0;
     let mapAnimation = new Animated.Value(0);
 
+
+
     useEffect(() => {
+        (async () => {
+            let { status } = await Location.requestForegroundPermissionsAsync();
+            if (status !== 'granted') {
+                setErrorMsg('Permission to access location was denied');
+                return;
+            }
+
+            let location = await Location.getCurrentPositionAsync({});
+            setLocation(location);
+        })();
+
         mapAnimation.addListener(({ value }) => {
             let index = Math.floor(value / CARD_WIDTH + 0.3); // animate 30% away from landing on the next item
             if (index >= state.markers.length) {
@@ -98,6 +114,15 @@ const MapScreen = () => {
 
         });
     });
+    let latitude = 0
+    let longitude = 0
+    if (errorMsg) {
+        latitude = 0;
+        longitude = 0;
+    } else if (location) {
+        latitude = location.coords.latitude;
+        longitude = location.coords.longitude;
+    }
 
     const interpolations = state.markers.map((marker, index) => {
         const inputRange = [
@@ -145,7 +170,7 @@ const MapScreen = () => {
                 style={styles.container}
                 provider={PROVIDER_GOOGLE}
                 customMapStyle={mapDarkStyle}
-                onPress={(e) => onMapPress(e)}
+                onPress={onMapPress}
             >
                 {state.markers.map((marker, index) => {
                     const scaleStyle = {
@@ -157,7 +182,7 @@ const MapScreen = () => {
                         ]
                     }
                     return (
-                        <Marker key={index} coordinate={marker.coordinate} onPress={(e) => onMarkerPress(e)}>
+                        <Marker key={index} coordinate={marker.coordinate}>
                             <Animated.View style={[styles.markerWrap]}>
                                 <Animated.Image
                                     source={require('../assets/images/marker.png')}
@@ -165,9 +190,39 @@ const MapScreen = () => {
                                     resizeMode="cover"
                                 />
                             </Animated.View>
+                            <Callout tooltip>
+                                <View>
+                                    <View style={{height: 80, width: 260, flexDirection: 'row', borderRadius: 20, borderColor: '#03DAC5', borderWidth: 1, alignSelf:'baseline', overflow: 'hidden', backgroundColor: '#303030'}}>
+                                        <View style={{alignItems: 'center', flexDirection: 'row'}}>
+                                            <View style={{width: 55, height: 55, backgroundColor: '#E4FFF9', borderRadius: 12, margin: 12, alignItems: 'center', justifyContent: 'center'}}>
+                                                <Text style={{fontFamily: "Roboto_700Bold", fontSize: 14, color: "#03DAC5"}}>DEC</Text>
+                                                <Text style={{fontFamily: "Roboto_500Medium", fontSize: 14}}>14</Text>
+                                            </View>
+                                            <View>
+                                                <Text style={{fontFamily: "Roboto_700Bold", color: '#fff', fontSize: 15, marginBottom: 5}}>NAME</Text>
+
+                                                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                                                    <View>
+                                                        <Text style={{color: '#fff'}}>Chicago Stadium</Text>
+                                                        <Text style={{color: '#03DAC5'}}>1901 W Madison St</Text>
+                                                    </View>
+                                                </View>
+                                            </View>
+                                        </View>
+                                    </View>
+                                    <View style={styles.arrowBorder}/>
+                                    <View style={styles.arrow}/>
+                                </View>
+                            </Callout>
                         </Marker>
                     );
                 })}
+                <Marker draggable
+                        coordinate={{latitude: latitude,
+                            longitude: longitude}}
+                >
+
+                </Marker>
             </MapView>
             <View style={styles.searchBox}>
                 <TextInput
@@ -176,10 +231,9 @@ const MapScreen = () => {
                     autoCapitalize={"none"}
                     style={{flex:1, padding: 5, marginLeft: 8}}/>
                 <Ionicons name={"ios-search"} size={20}
-                    style={{marginRight: 10, display: 'flex', alignSelf:'center'}}/>
+                          style={{marginRight: 10, display: 'flex', alignSelf:'center'}}/>
             </View>
-            {shouldShow ? (
-                <><ScrollView
+            <ScrollView
                     horizontal
                     scrollEventThrottle={1}
                     showsHorizontalScrollIndicator={false}
@@ -200,57 +254,33 @@ const MapScreen = () => {
                             <Text>{category.name}</Text>
                         </TouchableOpacity>
                     ))}
-                </ScrollView><Animated.ScrollView
-                    ref={_scrollView}
-                    horizontal
-                    scrollEventThrottle={1}
-                    showsHorizontalScrollIndicator={false}
-                    style={styles.scrollView}
-                    pagingEnabled
-                    snapToInterval={CARD_WIDTH + 20}
-                    snapToAlignment={"center"}
-                    contentInset={{
-                        top: 0,
-                        left: SPACING_FOR_CARD_INSET,
-                        bottom: 0,
-                        right: SPACING_FOR_CARD_INSET
-                    }}
-                    contentContainerStyle={{
-                        paddingHorizontal: Platform.OS == 'android' ? SPACING_FOR_CARD_INSET : 0
-                    }}
-                    onScroll={Animated.event(
-                        [
-                            {
-                                nativeEvent: {
-                                    contentOffset: {
-                                        x: mapAnimation,
-                                    }
-                                },
-                            },
-                        ]
-                    )}>
-                    {state.markers.map((marker, index) => (
-                        <View style={styles.card} key={index}>
-                            <Image
-                                source={marker.image}
-                                style={styles.cardImage}
-                                resizeMode={"cover"}/>
-                            <View style={styles.textContent}>
-                                <Text numberOfLines={1} style={styles.cardTitle}>{marker.title}</Text>
-                                <Text numberOfLines={1} style={styles.cardDescription}>{marker.title}</Text>
-                            </View>
-                        </View>
-                    ))}
-                </Animated.ScrollView></>
-                ) : <></>}
+                </ScrollView>
+
+            <ActionButton buttonColor="#03DAC5" >
+                <ActionButton.Item buttonColor='#6200EE' title="Create new event" onPress={() => setShouldShow(true)}>
+                    <Icon name="md-create" style={styles.actionButtonIcon} />
+                </ActionButton.Item>
+            </ActionButton>
         </View>
-)};
+    )};
 
 export default MapScreen;
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+    },
+    actionButtonIcon: {
+        fontSize: 20,
+        height: 22,
+        color: 'white',
+    },
+    markerCenter: {
+        position: 'absolute',
+        width: 25,
+        height: 25,
+        top:Dimensions.get('window').height/2,
+        left:Dimensions.get('window').width/2,
     },
     searchBox: {
         position:'absolute',
@@ -274,6 +304,30 @@ const styles = StyleSheet.create({
     },
     chipsIcon: {
         marginRight: 5,
+    },
+    bubble: {
+        borderRadius: 6,
+        borderColor: '#03DAC5',
+        backgroundColor: '#303030',
+        borderWidth: 0.5,
+        padding: 15,
+        width: 150
+    },
+    arrow: {
+        backgroundColor: 'transparent',
+        borderColor: 'transparent',
+        borderTopColor: '#03DAC5',
+        borderWidth: 16,
+        alignSelf: 'center',
+        marginTop: -32
+    },
+    arrowBorder: {
+        backgroundColor: 'transparent',
+        borderColor: 'transparent',
+        borderTopColor: '#03DAC5',
+        borderWidth: 16,
+        alignSelf: 'center',
+        marginTop: -0.5
     },
     chipsItem: {
         flexDirection:"row",
@@ -359,5 +413,9 @@ const styles = StyleSheet.create({
     textSign: {
         fontSize: 14,
         fontWeight: 'bold'
+    },
+    image: {
+        width: 120,
+        height: 80
     }
 });

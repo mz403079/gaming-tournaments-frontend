@@ -26,7 +26,10 @@
       },
       "infoPlist": {
         "NSCPhotoLibraryUsageDescription": "GameTournaments requires photo library access.",
-        "NSCameraUsageDescription": "GameTournaments requires camera access to take a photo"
+        "NSCameraUsageDescription": "GameTournaments requires camera access to take a photo",
+        "NSLocationWhenInUseUsageDescription": "GameTournaments requires access to your location to display it on map",
+        "NSLocationUsageDescription": "GameTournaments requires access to your location to display it on map",
+        "NSLocationAlwaysUsageDescription": "GameTournaments requires access to your location to display it on map"
       }
     },
     "android": {
@@ -35,7 +38,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": [ "CAMERA", "WRITE_EXTERNAL_STORAGE", "CAMERA_ROLL" ]
+      "permissions": [ "CAMERA", "WRITE_EXTERNAL_STORAGE", "CAMERA_ROLL", "ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION", "FOREGROUND_SERVICE"]
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
