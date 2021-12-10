@@ -36,6 +36,7 @@ import BannerSlider from "../components/BannerSlider";
 import CustomSwitch from "../components/CustomSwitch";
 import {render} from "react-dom";
 import {List} from "react-native-paper";
+import {useNavigation} from "@react-navigation/native";
 
 type TournamentProps = {
     name: string,
@@ -52,7 +53,7 @@ type TournamentProps = {
     tournamentStart: string;
 }
 const HomeScreen = ({ navigation }) => {
-
+    const {navigate} = useNavigation();
     const [isLoading, setLoading] = useState(false);
     const [tournaments, setTournaments] = useState([]);
     const tournamentsURL = 'https://gen-gg.herokuapp.com/api/getTournaments';
@@ -129,7 +130,7 @@ const HomeScreen = ({ navigation }) => {
                 }}>
                     <View style={{
                         flexDirection: 'row', alignItems: 'center'}}>
-                    <SearchBar navigation={navigation}>
+                    <SearchBar navigate={navigate}>
 
                     </SearchBar>
                     </View>
