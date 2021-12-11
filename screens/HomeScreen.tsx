@@ -122,30 +122,8 @@ const HomeScreen = ({ navigation }) => {
     return (
         <SafeAreaView style={{flex: 1, backgroundColor: "#121212"}}>
             <StatusBar barStyle="light-content"/>
+            <SearchBar navigate={navigate}/>
             <ScrollView style={{padding: 20}}>
-                <View style={{
-                    flexDirection: 'row',
-                    marginBottom: 20,
-
-                }}>
-                    <View style={{
-                        flexDirection: 'row', alignItems: 'center'}}>
-                    <SearchBar navigate={navigate}>
-
-                    </SearchBar>
-                    </View>
-                </View>
-                <View style={{
-                    flexDirection: 'row',
-                    borderColor: '#C6C6C6',
-                    borderWidth: 1,
-                    borderRadius: 8,
-                    paddingHorizontal: 10,
-                    paddingVertical: 8,
-                }}>
-                    <Feather name="search" size={20} color="#C6C6C6" style={{marginRight: 5}}/>
-                    <TextInput placeholder="Search"/>
-                </View>
                 <View style={{
                     marginVertical: 15,
                     flexDirection: 'row',
