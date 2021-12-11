@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import {
     SafeAreaView,
     Dimensions,
@@ -7,18 +7,32 @@ import {
     TextInput,
     Image,
     TouchableHighlight,
-    ScrollView, Text, TouchableOpacity, ImageBackground,
+    ScrollView, Text, TouchableOpacity, ImageBackground, ActivityIndicator, FlatList,
 } from "react-native";
 
 import Icon from 'react-native-vector-icons/FontAwesome'
-
+import _ from 'lodash'
 import Animated, {Easing} from 'react-native-reanimated'
 import { useNavigation } from '@react-navigation/native';
+import SearchListItem from "./SearchListItem";
 const { Value, timing } = Animated
 
 const width = Dimensions.get('window').width
 const height = Dimensions.get('window').height
-
+type TournamentProps = {
+    name: string,
+    currentNumberOfTeams: number,
+    description: string,
+    lan: boolean,
+    maxNumberOfTeams: number,
+    maxTeamSize: number,
+    reward: string,
+    rules: string,
+    teams: [],
+    tournamentEnd: string,
+    tournamentId: number,
+    tournamentStart: string;
+}
 class SearchBar extends React.Component {
     private _input_box_translate_x;
     private _back_button_opacity;
@@ -30,13 +44,29 @@ class SearchBar extends React.Component {
 
         this.state = {
             isFocused: false,
-            keyword: ''
+            keyword: '',
+            isLoading: true,
+            tournaments: [],
+            filteredTournaments: [],
+            search: ''
         }
 
         this._input_box_translate_x = new Value(width)
         this._back_button_opacity = new Value(0)
         this._content_translate_y = new Value(height)
         this._content_opacity = new Value(0)
+    }
+
+
+    private tournamentsURL = 'https://gen-gg.herokuapp.com/api/getTournaments';
+
+    componentDidMount() {
+        this.setState({isLoading: true})
+        fetch(this.tournamentsURL)
+            .then((response) => response.json())
+            .then((json) => this.setState({tournaments: json}))
+            .catch((error) => console.error(error))
+            .finally(() => this.setState({isLoading: false}));
     }
 
     _onFocus = () => {
@@ -110,8 +140,68 @@ class SearchBar extends React.Component {
         //force blur
         this.refs.input.blur()
     }
+    handleSearch = (value) => {
+        console.log('value', value)
+        if(value) {
+            const newData = this.state.tournaments.filter((item) => {
+                const itemData = item.name ? item.name.toUpperCase()
+                    : ''.toUpperCase()
+                const textData = value.toUpperCase()
+                return itemData.indexOf(textData) > -1
+            })
+
+            this.setState({filteredTournaments: newData})
+            this.setState({keyword: value})
+        }
+        else {
+            this.setState({filteredTournaments: this.state.tournaments})
+            this.setState({keyword: value})
+        }
+    }
 
     render(){
+
+        if (this.state.isLoading) {
+            return (
+                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#121212'}}>
+                    <ActivityIndicator size={"large"}/>
+                </View>
+            );
+        }
+
+        const renderSeparator = () => {
+            return (
+                <View
+                    style={{
+                        height: 1,
+                        width: "86%",
+                        backgroundColor: "#03DAC5"
+                    }}/>
+            )
+        }
+
+        const renderList = ({item, index}: { item: TournamentProps, index: any }) => {
+            console.log(item.name);
+            return (
+                <TouchableOpacity onPress={() => {this.props.navigate('CreateTournament')}}>
+                    <SearchListItem name={item.name}
+                              currentNumberOfTeams={item.currentNumberOfTeams}
+                              description={item.description}
+                              lan={item.lan}
+                              maxNumberOfTeams={item.maxNumberOfTeams}
+                              maxTeamSize={item.maxTeamSize}
+                              reward={item.reward}
+                              rules={item.rules}
+                              teams={item.teams}
+                              tournamentEnd={item.tournamentEnd}
+                              tournamentId={item.tournamentId}
+                              tournamentStart={item.tournamentStart}
+
+                    />
+                </TouchableOpacity>
+            )
+        }
+
     return (
         <>
             <SafeAreaView style={styles.header_safe_area}>
@@ -155,7 +245,7 @@ class SearchBar extends React.Component {
                                     placeholder="Search"
                                     clearButtonMode="always"
                                     value={this.state.keyword}
-                                    onChangeText={(value) => this.setState({keyword: value})}
+                                    onChangeText={this.handleSearch}
                                     style={styles.input}/>
                             </Animated.View>
                         </View>
@@ -178,28 +268,37 @@ class SearchBar extends React.Component {
                                     </Text>
                                 </View>
                             :
-                                <ScrollView>
-                                    <View style={styles.search_item}>
-                                        <Icon name="search" style={styles.item_icon} size={16} color={"#ccc"}/>
-                                        <Text style={{color: 'white'}}>Fake result 1</Text>
-                                    </View>
-                                    <View style={styles.search_item}>
-                                        <Icon name="search" style={styles.item_icon} size={16} color={"#ccc"}/>
-                                        <Text style={{color: 'white'}}>Fake result 2</Text>
-                                    </View>
-                                    <View style={styles.search_item}>
-                                        <Icon name="search" style={styles.item_icon} size={16} color={"#ccc"}/>
-                                        <Text style={{color: 'white'}}>Fake result 3</Text>
-                                    </View>
-                                    <View style={styles.search_item}>
-                                        <Icon name="search" style={styles.item_icon} size={16} color={"#ccc"}/>
-                                        <Text style={{color: 'white'}}>Fake result 4</Text>
-                                    </View>
-                                    <View style={styles.search_item}>
-                                        <Icon name="search" style={styles.item_icon} size={16} color={"#ccc"}/>
-                                        <Text style={{color: 'white'}}>Fake result 5</Text>
-                                    </View>
-                                </ScrollView>
+                                // <ScrollView>
+                                //     <View style={styles.search_item}>
+                                //         <Icon name="search" style={styles.item_icon} size={16} color={"#ccc"}/>
+                                //         <Text style={{color: 'white'}}>Fake result 1</Text>
+                                //     </View>
+                                //     <View style={styles.search_item}>
+                                //         <Icon name="search" style={styles.item_icon} size={16} color={"#ccc"}/>
+                                //         <Text style={{color: 'white'}}>Fake result 2</Text>
+                                //     </View>
+                                //     <View style={styles.search_item}>
+                                //         <Icon name="search" style={styles.item_icon} size={16} color={"#ccc"}/>
+                                //         <Text style={{color: 'white'}}>Fake result 3</Text>
+                                //     </View>
+                                //     <View style={styles.search_item}>
+                                //         <Icon name="search" style={styles.item_icon} size={16} color={"#ccc"}/>
+                                //         <Text style={{color: 'white'}}>Fake result 4</Text>
+                                //     </View>
+                                //     <View style={styles.search_item}>
+                                //         <Icon name="search" style={styles.item_icon} size={16} color={"#ccc"}/>
+                                //         <Text style={{color: 'white'}}>Fake result 5</Text>
+                                //     </View>
+                                // </ScrollView>
+                            <FlatList
+                                data={this.state.filteredTournaments}
+                                // keyExtractor={(item, index) => index.toString()}
+                                // ItemSeparatorComponent={(ItemSeparatorView)}
+                                renderItem={renderList}
+                                ItemSeparatorComponent={renderSeparator}>
+
+
+                            </FlatList>
                         }
                     </View>
                 </SafeAreaView>
