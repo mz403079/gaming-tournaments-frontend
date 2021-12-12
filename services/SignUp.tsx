@@ -1,6 +1,6 @@
 interface FormData {
   username: string;
-  password: string;
+  plainPassword: string;
   email: string;
   name: string;
   surname: string;
@@ -16,9 +16,9 @@ const SignUp = async (data: FormData) => {
     .then((response) => response.json())
     .then(async (data) => {
       if (data.status && data.status !== 200) {
-        console.log("error");
+        return "error"
       } else {
-        console.log("z essą");
+        return "z essa"
       }
     })
     .catch((error) => {

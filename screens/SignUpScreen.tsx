@@ -46,11 +46,12 @@ const SignUpScreen = ({ navigation }: { navigation: any }) => {
   function register() {
     SignUpRequest({
       username: data.username,
-      password: data.password,
+      plainPassword: data.password,
       email: data.email,
       name: data.name,
       surname: data.surname,
-    }).then(() => {
+    }).then((response) => {
+      console.log(response)
       SignInRequest({
         plainPassword: data.password,
         username: data.username,
