@@ -1,12 +1,21 @@
-import {Text, View} from "react-native";
-import React from "react";
+import React from 'react';
+import { Text, View, StyleSheet, ScrollView} from 'react-native';
 
-const TournamentDetailsScreen = ({ navigation }) => {
+const EventDetail = ({ navigation, route }) => {
     return (
-        <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
-            <Text>Tournament Details Screen</Text>
+        <View style={styles.container}>
+            <Text style={{ color: '#fff', fontSize: 30 }}>EventDetail</Text>
         </View>
     );
-}
+};
 
-export default TournamentDetailsScreen;
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#000',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+});
+
+export default EventDetail;
