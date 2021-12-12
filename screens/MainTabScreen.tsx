@@ -10,6 +10,7 @@ import RankingScreen from "./RankingScreen";
 import ProfileScreen from "./ProfileScreen";
 import MyTicketsScreen from "./MyTicketsScreen";
 import EditProfileScreen from "./EditProfileScreen";
+import GameAccountsScreen from "./GameAccountsScreen";
 const HomeStack = createStackNavigator();
 const ProfileStack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -174,6 +175,13 @@ const ProfileStackScreen = ({navigation}: { navigation: any }) => (
                 title: "Edit Profile"
             }}
             component={EditProfileScreen}
+        />
+        <ProfileStack.Screen
+            name="GameAccounts"
+            options={{
+                title: "Game Accounts"
+            }}
+            component={GameAccountsScreen}
         />
     </ProfileStack.Navigator>
 );

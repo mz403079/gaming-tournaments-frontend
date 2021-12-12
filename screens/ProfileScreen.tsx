@@ -3,7 +3,7 @@ import React, {useState, useEffect} from "react";
 import {Avatar, Title, Caption, TouchableRipple} from 'react-native-paper'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const ProfileScreen = () => {
+const ProfileScreen = ({ navigation }) => {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.userInfoSection}>
@@ -52,7 +52,7 @@ const ProfileScreen = () => {
                         <Text style={styles.menuItemText}>Payment</Text>
                     </View>
                 </TouchableRipple>
-                <TouchableRipple onPress={() => {}}>
+                <TouchableRipple onPress={() => navigation.navigate('GameAccounts')}>
                     <View style={styles.menuItem}>
                         <Icon name="account-group" color="#03DAC5" size={25}/>
                         <Text style={styles.menuItemText}>Game accounts</Text>
