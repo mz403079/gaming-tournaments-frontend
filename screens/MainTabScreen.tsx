@@ -13,6 +13,7 @@ import MyTicketsScreen from "./MyTicketsScreen";
 import EditProfileScreen from "./EditProfileScreen";
 import GameAccountsScreen from "./GameAccountsScreen";
 import {getFocusedRouteNameFromRoute} from "@react-navigation/native";
+import RegistrationForTournamentScreen from "./RegistrationForTournamentScreen";
 const HomeStack = createStackNavigator();
 const ProfileStack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -102,9 +103,13 @@ const HomeStackScreen = ({navigation}: { navigation: any }) => (
             options={{
                 headerShown: false,
             }}
-
-
         />
+        <HomeStack.Screen
+            name="RegistrationForTournaments"
+            component={RegistrationForTournamentScreen}
+            options={{
+                headerShown: false,
+            }}/>
     </HomeStack.Navigator>
 );
 

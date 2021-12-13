@@ -156,7 +156,7 @@ const EventDetail = ({ navigation, route }) => {
                         </View>
                     </View>
                         <TouchableOpacity
-                            onPress={()=>{navigation.navigate('')}}>
+                            onPress={()=>{navigation.navigate('RegistrationForTournaments', {selectedEvent})}}>
                             <LinearGradient
                                 colors={['#03DAC5', '#03DAC5']}
                                 start={{ x: 0, y: 1 }}
