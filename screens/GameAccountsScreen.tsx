@@ -18,97 +18,86 @@ import Modal from "react-native-modal";
 import { Picker } from "@react-native-picker/picker";
 import ModalSelector from "react-native-modal-selector";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
-import Feather from "react-native-vector-icons/Feather";
-import Animated from "react-native-reanimated";
-import * as ImagePicker from "expo-image-picker";
-import { colors } from "../assets/colors/colors";
-import { UIImagePickerPresentationStyle } from "expo-image-picker/build/ImagePicker.types";
-// import {GetUserInfo, GetId} from "../services";
 import { Avatar, Caption, Title, TouchableRipple } from "react-native-paper";
-import HomeScreen from "./HomeScreen";
 import GameAccount from "../components/GameAccount";
 import { isLoaded } from "expo-font";
-import { getId } from "../services/User";
+import { GetId, AddGameAccount, DeleteGameAccount } from "../services/";
 
-interface arrayItem {
-  id: string;
-  game: string;
-  text: string;
-}
 interface game {
   gameId: number;
   name: string;
 }
 interface gameAccount {
-  gameAccountId: string
-  inGameName: string
-  game: game
+  gameAccountId: string;
+  inGameName: string;
+  game: game;
 }
 const GameAccountsScreen = () => {
   const [state, setState] = useState({
     disabled: false,
     selectedLanguage: "LOL",
     nickname: "",
-    textInputValue: "",
+    gameName: "",
+    gameId: 0,
   });
-  const gamesURL = "https://gen-gg.herokuapp.com/api/getGames"
-  const gamesAccountsURL = "https://gen-gg.herokuapp.com/api/getGameAccounts/"
-  const [valueArray, setValueArray] = useState<arrayItem[]>([])
-  const [modalVisible, setModalVisible] = useState(false)
-  const [index, setIndex] = useState(0)
-  const [games, setGames] = useState<game[]>([])
-  const [gameAccounts, setGameAccounts] = useState<gameAccount[]>([])
+  const gamesURL = "https://gen-gg.herokuapp.com/api/getGames";
+  const gamesAccountsURL = "https://gen-gg.herokuapp.com/api/getGameAccounts/";
+  const [userId, setUserId] = useState<number>(0);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [index, setIndex] = useState(0);
+  const [games, setGames] = useState<game[]>([]);
+  const [gameAccounts, setGameAccounts] = useState<gameAccount[]>([]);
+  const [refeshKey, setRefreshKey] = useState(0);
   const [loading, setLoading] = useState(true);
   let getGames = () => {
     fetch(gamesURL)
       .then((response) => response.json())
       .then((json) => setGames(json))
-      .catch((error) => console.error(error))
-
+      .catch((error) => console.error(error));
   };
   let getGameAccounts = () => {
-    getId().then((res) => fetch(gamesAccountsURL+res))
+    GetId()
+      .then((res) => fetch(gamesAccountsURL + res))
       .then((response) => response.json())
       .then((json) => setGameAccounts(json))
       .catch((error) => console.error(error))
       .finally(() => setLoading(false));
   };
   useEffect(() => {
-    getGames()
-    getGameAccounts()
+    getGames();
+    getGameAccounts();
+    GetId().then((res) => setUserId(res));
   }, []);
+
+  useEffect(() => {
+    getGameAccounts();
+  }, [refeshKey]);
 
   const afterAnimationComplete = () => {
     setIndex(index + 1);
     setState({ ...state, disabled: false });
   };
   const addMore = () => {
-    if (state.textInputValue == "" || state.nickname == "") {
+    if (state.gameName == "" || state.nickname == "") {
       Alert.alert("Account data cannot be empty");
       return;
     }
 
-    const newlyAddedValue = {
-      id: "id_" + index,
-      game: state.textInputValue,
-      text: state.nickname,
-    };
+    AddGameAccount(
+      {
+        inGameName: state.nickname,
+        game: { gameId: state.gameId, name: state.gameName },
+      },
+      userId
+    ).then(() => setRefreshKey(refeshKey + 1));
 
-    const newarray = [...valueArray, newlyAddedValue];
-    setValueArray(newarray);
     setModalVisible(false);
   };
 
-  function remove(id: string) {
-    const newArray = [...valueArray];
-    newArray.splice(
-      newArray.findIndex((ele) => ele.id === id),
-      1
-    );
-
-    setValueArray(newArray);
+  function remove(id: number) {
+    DeleteGameAccount(id).then(() => setRefreshKey(refeshKey + 1));
   }
+
   if (loading) {
     return (
       <View
@@ -148,7 +137,11 @@ const GameAccountsScreen = () => {
             scrollViewAccessibilityLabel={"Scrollable options"}
             cancelButtonAccessibilityLabel={"Cancel Button"}
             onChange={(option) => {
-              setState({ ...state, textInputValue: option.name });
+              setState({
+                ...state,
+                gameName: option.name,
+                gameId: option.gameId,
+              });
             }}
           >
             <TextInput
@@ -160,7 +153,7 @@ const GameAccountsScreen = () => {
               }}
               editable={false}
               placeholder="Select your game"
-              value={state.textInputValue}
+              value={state.gameName}
             />
           </ModalSelector>
           <Text>Nickname: </Text>
@@ -212,7 +205,6 @@ const GameAccountsScreen = () => {
       <ScrollView>
         <View style={{ flex: 1, padding: 4 }}>
           {gameAccounts.map((ele) => {
-              console.log(ele)
             return (
               <GameAccount
                 key={ele.gameAccountId}
