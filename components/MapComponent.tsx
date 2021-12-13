@@ -6,7 +6,6 @@ import GamingMarker from "../assets/images/marker.svg"
 import {mapDarkStyle} from "../model/mapData";
 const MapScreen = () => {
     return (
-
         <MapView provider={PROVIDER_GOOGLE}
                  style={styles.map}
                  region={{

@@ -44,6 +44,7 @@ const CreateTournament = () => {
     street: "",
     regulations: "",
     organizer: user,
+
   });
   const [errorMessages, setErrorMessages] = React.useState({
     nameError: "",
@@ -54,26 +55,34 @@ const CreateTournament = () => {
     streetError: "",
     tournamentStartError: "",
     tournamentEndError: "",
+    apiError: "",
   });
-  function submitForm() {
-    let { tournamentEnd, tournamentStart } = data;
-    let stringEnd =
-      tournamentEnd.getFullYear() +
-      "-" +
-      (tournamentEnd.getMonth() + 1) +
-      "-" +
-      tournamentEnd.getDay();
-    let stringStart =
-      tournamentStart.getFullYear() +
-      "-" +
-      (tournamentStart.getMonth() + 1) +
-      "-" +
-      tournamentStart.getDay() +
-      " " +
-      tournamentStart.getHours() +
-      ":" +
-      tournamentStart.getMinutes();
+  const [coordinates, setCoordinates] = React.useState()
+  const [statusApi, setStatusApi] = React.useState()
+  const [latitude, setLatitude] = useState(0);
+  const [longitude, setLongitude] = useState(0);
 
+  function submitForm() {
+    let {tournamentEnd, tournamentStart} = data;
+    let stringEnd =
+        tournamentEnd.getFullYear() +
+        "-" +
+        (tournamentEnd.getMonth() + 1) +
+        "-" +
+        tournamentEnd.getDay();
+    let stringStart =
+        tournamentStart.getFullYear() +
+        "-" +
+        (tournamentStart.getMonth() + 1) +
+        "-" +
+        tournamentStart.getDay() +
+        " " +
+        tournamentStart.getHours() +
+        ":" +
+        tournamentStart.getMinutes();
+    let address = data.city + ' ' + data.street
+    console.log("LATITUDE", latitude)
+    console.log("LONGITUDE", longitude)
     AddTournament({
       name: data.name,
       description: data.description,
@@ -87,7 +96,9 @@ const CreateTournament = () => {
       organizer: user,
       tournamentStart: stringStart,
       tournamentEnd: stringEnd,
-    });
+      lat: latitude,
+      lng: longitude,
+    })
   }
   function validateForm() {
     const {
@@ -102,6 +113,7 @@ const CreateTournament = () => {
       street,
       regulations,
     } = data;
+
     setErrorMessages({
       ...errorMessages,
       nameError: name.length > 0 ? "" : "This field is required",
@@ -115,9 +127,15 @@ const CreateTournament = () => {
       tournamentEndError:
         tournamentEnd >= tournamentStart ? "" : "Tournament end must come after tournament start",
       tournamentStartError:
-        tournamentStart >= new Date() ? "" : "Tournament can't take place in the past",  
+        tournamentStart >= new Date() ? "" : "Tournament can't take place in the past",
       streetError: street.length > 0 ? "" : "This field is required",
+      apiError: statusApi == "OK" ? "": "Incorrect address"
     });
+  }
+  function parseJson(response: any){
+    console.log("RESPONSE ", response)
+    setCoordinates(response.results.geometry.location)
+    setStatusApi(response.status)
   }
   useEffect(() => {
     validateForm();
@@ -127,6 +145,7 @@ const CreateTournament = () => {
   const [mode, setMode] = useState("date");
   const [showStartDate, setShowStartDate] = useState(false);
   const [showEndDate, setShowEndDate] = useState(false);
+
   const onChangeTournamentStart = (event, selectedDate) => {
     console.log(data.tournamentStart);
     const currentDate = selectedDate || date;
@@ -168,6 +187,25 @@ const CreateTournament = () => {
     var month = val.getMonth() + 1;
     var year = val.getFullYear();
     return day + "-" + month + "-" + year;
+  }
+  async function getCoordinates(address: string)  {
+
+    const encodedAddress = encodeURI(address)
+    console.log(encodedAddress)
+    // fetches data from our api
+    await fetch(`https://google-maps-geocoding.p.rapidapi.com/geocode/json?language=pl&address=${encodedAddress}`, {
+      "method": "GET",
+      "headers": {
+        "x-rapidapi-host": "google-maps-geocoding.p.rapidapi.com",
+        "x-rapidapi-key": "niema"
+      }
+    })
+        .then(response => response.json())
+        .then(response => {
+          setLatitude(response.results[0].geometry.location.lat)
+          setLongitude(response.results[0].geometry.location.lng)
+        })
+        .catch(err => console.log(err))
   }
 
   function formatHour(val: Date) {
@@ -344,6 +382,7 @@ const CreateTournament = () => {
             placeholder="City"
             label="City"
             onChange={onChangeCity}
+            onPressOut={() => {getCoordinates(data.city + ' ' + data.street)}}
             errorText={errorMessages.cityError}
             checked={errorMessages.cityError === ""}
           />
@@ -351,7 +390,7 @@ const CreateTournament = () => {
             placeholder="Street"
             label="Street"
             onChange={onChangeStreet}
-            errorText={errorMessages.streetError}
+            errorText={errorMessages.apiError}
             checked={errorMessages.streetError === ""}
           />
           <InputField

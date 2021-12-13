@@ -14,10 +14,12 @@ interface FormData {
     street: string
     regulations: string
     organizer: UserData
-
+    lat: number
+    lng: number
 
   }
   const AddTournament = async (data: FormData) => {
+      console.log(data)
     try {
       const response = await fetch(
         "https://gen-gg.herokuapp.com/api/addTournament",

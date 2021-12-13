@@ -25,6 +25,7 @@ interface InputProps {
   selectTextOnFocus?: boolean
   onFocus?: (...args: any[]) => void
   keyboardType?: string
+  onPressOut?: (...args: any[]) => void
 }
 
 const InputField: React.FC<InputProps> = (props) => {
@@ -43,6 +44,7 @@ const InputField: React.FC<InputProps> = (props) => {
     editable = true,
     selectTextOnFocus = true,
     keyboardType,
+    onPressOut,
     ...rest
   } = props;
   const [secureTextEntry, setSecureTextEntry] = React.useState(password);
@@ -62,6 +64,7 @@ const InputField: React.FC<InputProps> = (props) => {
           placeholder={placeholder}
           style={styles.textInput}
           value={value}
+          onPressOut={onPressOut}
           // editable={editable}
           // selectTextOnFocus={selectTextOnFocus}
           autoCapitalize="none"
