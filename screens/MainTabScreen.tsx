@@ -4,6 +4,7 @@ import {createMaterialBottomTabNavigator} from '@react-navigation/material-botto
 import {createStackNavigator} from '@react-navigation/stack';
 import HomeScreen from '../screens/HomeScreen';
 import MapScreen from '../screens/MapScreen';
+import TournamentDetailsScreen from "./TournamentDetailsScreen";
 import Icon from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import RankingScreen from "./RankingScreen";
@@ -11,10 +12,13 @@ import ProfileScreen from "./ProfileScreen";
 import MyTicketsScreen from "./MyTicketsScreen";
 import EditProfileScreen from "./EditProfileScreen";
 import GameAccountsScreen from "./GameAccountsScreen";
+import {getFocusedRouteNameFromRoute} from "@react-navigation/native";
 const HomeStack = createStackNavigator();
 const ProfileStack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
+const TopStack = createStackNavigator();
 const MainTabScreen = () => (
+
     <Tab.Navigator
         initialRouteName="Feed"
         activeColor="#03DAC5"
@@ -24,13 +28,13 @@ const MainTabScreen = () => (
         <Tab.Screen
             name="HomeTab"
             component={HomeStackScreen}
-            options={{
-
+            options={({ route }) => ({
+                tabBarStyle: {display: 'none'},
                 tabBarLabel: 'Home',
                 tabBarIcon: ({color}) => (
                     <Icon name="ios-home" color={color} size={26}/>
                 ),
-            }}
+            })}
         />
         <Tab.Screen
             name="RankingTab"
@@ -92,6 +96,15 @@ const HomeStackScreen = ({navigation}: { navigation: any }) => (
             // )
             headerShown: false
         }}/>
+        <HomeStack.Screen
+            name="TournamentDetails"
+            component={TournamentDetailsScreen}
+            options={{
+                headerShown: false,
+            }}
+
+
+        />
     </HomeStack.Navigator>
 );
 

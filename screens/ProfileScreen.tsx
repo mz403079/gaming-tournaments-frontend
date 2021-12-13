@@ -46,7 +46,7 @@ const ProfileScreen = ({ navigation }) => {
             </View>
 
             <View style={styles.menuWrapper}>
-                <TouchableRipple onPress={() => {}}>
+                <TouchableRipple onPress={() => {navigation.navigate('TournamentDetails')}}>
                     <View style={styles.menuItem}>
                         <Icon name="credit-card-outline" color="#03DAC5" size={25}/>
                         <Text style={styles.menuItemText}>Payment</Text>

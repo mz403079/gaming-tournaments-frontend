@@ -92,7 +92,7 @@ const HomeScreen = ({ navigation }) => {
     const renderList = ({item, index}: { item: TournamentProps, index: any }) => {
         console.log(item.name);
         return (
-        <TouchableOpacity onPress={() => {navigation.navigate('CreateTournament')}}>
+        <TouchableOpacity onPress={() => {navigation.navigate('TournamentDetails', {selectedEvent: item})}}>
         <ListItem name={item.name}
                              currentNumberOfTeams={item.currentNumberOfTeams}
                              description={item.description}
@@ -131,8 +131,7 @@ const HomeScreen = ({ navigation }) => {
                 }}>
                     <Text style={{fontSize: 18, fontFamily: 'Roboto_500Medium', color: '#fff'}}>Upcoming
                         Events</Text>
-                    <TouchableOpacity onPress={() => {
-                    }}>
+                    <TouchableOpacity onPress={() => {}}>
                         <Text style={{color: '#03DAC5'}}>See all</Text>
                     </TouchableOpacity>
                 </View>

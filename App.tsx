@@ -33,6 +33,7 @@ import ProfileScreen from "./screens/ProfileScreen";
 import MyTicketsScreen from "./screens/MyTicketsScreen";
 import CreateTournament from "./screens/CreateTournament";
 import SearchBar from "./components/SearchBar";
+import TournamentDetailsScreen from "./screens/TournamentDetailsScreen";
 const Drawer = createDrawerNavigator();
 const DrawerNavigator = Drawer.Navigator;
 interface User {
@@ -86,6 +87,7 @@ const App = () => {
                     <Drawer.Screen component={MapScreen} name="Map" options={{headerShown: false}}/>
                     <Drawer.Screen component={MyTicketsScreen} name="MyTickets" options={{headerShown: false}}/>
                     <Drawer.Screen component={ProfileScreen} name="Profile" options={{headerShown: false}}/>
+                    <Drawer.Screen component={TournamentDetailsScreen} name="TournamentDetails" options={{headerShown: false}}/>
                     <Drawer.Screen component={CreateTournament} name="CreateTournament" options={{headerShown: false}}/>
                     <Drawer.Screen component={SearchBar} name="SearchBar" options={{headerShown: false}}/>
                 </DrawerNavigator>
