@@ -42,9 +42,9 @@ const EditProfileScreen = () => {
   });
   const [userId, setUserId] = useState<number>(0);
   const [isLoading, setLoading] = useState(false);
-  const tournamentsURL = 'https://gen-gg.herokuapp.com/api/getUserInfo/';
-  let getTournaments = () => {
-    getId().then((res) => fetch(tournamentsURL+res))
+  const userInfoURL = 'https://gen-gg.herokuapp.com/api/getUserInfo/';
+  let getUserInfo = () => {
+    getId().then((res) => fetch(userInfoURL+res))
         .then((response) => response.json())
         .then((json) => setUser(json))
         .catch((error) => console.error(error))
@@ -54,7 +54,7 @@ const EditProfileScreen = () => {
   useEffect(() => {
     setLoading(true);
     getId().then((res) => setUserId(res))
-    getTournaments()
+    getUserInfo()
   }, []);
 
   const image =
