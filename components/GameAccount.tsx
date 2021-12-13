@@ -44,8 +44,8 @@ export default class GameAccount extends Component <any, any> {
                 useNativeDriver: true
             }
         ).start(() => {
-            console.log('item id', this.props.item.id)
-            this.props.removeItem(this.props.item.id);
+            console.log('item id', this.props.item.gameAccountId)
+            this.props.removeItem(this.props.item.gameAccountId);
         });
     }
 
@@ -69,7 +69,7 @@ export default class GameAccount extends Component <any, any> {
             >
                 <Text
                     style={styles.displayText}>
-                    {this.props.item.game} :  {this.props.item.text}
+                    {this.props.item.game.name} :  {this.props.item.inGameName}
                 </Text>
 
                     <TouchableOpacity
