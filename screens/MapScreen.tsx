@@ -9,14 +9,14 @@ import {
     Image,
     TouchableOpacity,
     Dimensions,
-    Platform, ImageBackground, Alert,
+    Platform, ImageBackground, Alert, ActivityIndicator,
 } from "react-native";
 import MapView, {PROVIDER_GOOGLE, Marker, MapEvent, Callout} from "react-native-maps";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import ActionButton from 'react-native-action-button';
-import { markers, mapDarkStyle} from '../model/mapData';
+import {mapDarkStyle} from '../model/mapData';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useTheme } from '@react-navigation/native';
 import * as ImagePicker from "expo-image-picker";
@@ -29,10 +29,24 @@ const SPACING_FOR_CARD_INSET = width * 0.1 - 10;
 const MapScreen = () => {
     const [shouldShow, setShouldShow] = useState(true);
     const [location, setLocation] = useState(null);
+    const [userLatitude, setUserLatitude] = useState(null);
+    const [userLongitude, setUserLongitude] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
+    const [isLoading, setLoading] = useState(true);
+    const [tournaments, setTournaments] = useState([]);
+
+    const tournamentsURL = 'https://gen-gg.herokuapp.com/api/getTournaments';
+
+    let getTournaments = () => {
+        fetch(tournamentsURL)
+            .then((response) => response.json())
+            .then((json) => setTournaments(json))
+            .catch((error) => console.error(error))
+            .finally(() => setLoading(false));
+    }
 
     const initialMapState = {
-        markers,
+        tournaments,
         categories: [
             {
                 name: 'Rocket League',
@@ -74,20 +88,11 @@ const MapScreen = () => {
 
 
     useEffect(() => {
-        (async () => {
-            let { status } = await Location.requestForegroundPermissionsAsync();
-            if (status !== 'granted') {
-                setErrorMsg('Permission to access location was denied');
-                return;
-            }
-
-            let location = await Location.getCurrentPositionAsync({});
-            setLocation(location);
-        })();
-
+        getTournaments()
+        console.log(tournaments)
         mapAnimation.addListener(({ value }) => {
             let index = Math.floor(value / CARD_WIDTH + 0.3); // animate 30% away from landing on the next item
-            if (index >= state.markers.length) {
+            if (index >= state.tournaments.length) {
                 index = state.markers.length - 1;
             }
             if (index <= 0) {
@@ -114,17 +119,18 @@ const MapScreen = () => {
 
         });
     });
-    let latitude = 0
-    let longitude = 0
-    if (errorMsg) {
-        latitude = 0;
-        longitude = 0;
-    } else if (location) {
-        latitude = location.coords.latitude;
-        longitude = location.coords.longitude;
+
+    const mapMarkers = () => {
+        return tournaments.map((tournament) => <Marker
+            key={tournament.id}
+            coordinate={{ latitude: tournament.lat, longitude: tournament.lng }}
+            title={tournament.location}
+            description={tournament.comments}
+        >
+        </Marker >)
     }
 
-    const interpolations = state.markers.map((marker, index) => {
+    const interpolations = tournaments.map((marker, index) => {
         const inputRange = [
             (index -1) * CARD_WIDTH,
             index * CARD_WIDTH,
@@ -162,6 +168,13 @@ const MapScreen = () => {
     }
     const _scrollView = React.useRef(null);
 
+    if (isLoading) {
+        return (
+            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#121212'}}>
+                <ActivityIndicator size={"large"}/>
+            </View>
+        );
+    }
     return (
         <View style={styles.container}>
             <MapView
@@ -172,57 +185,52 @@ const MapScreen = () => {
                 customMapStyle={mapDarkStyle}
                 onPress={onMapPress}
             >
-                {state.markers.map((marker, index) => {
-                    const scaleStyle = {
-                        transform: [
-                            {
-                                scale: interpolations[index].scale,
+                {mapMarkers()}
+                {/*{tournaments.map((marker, index) => {*/}
+                {/*    const scaleStyle = {*/}
+                {/*        transform: [*/}
+                {/*            {*/}
+                {/*                scale: interpolations[index].scale,*/}
 
-                            }
-                        ]
-                    }
-                    return (
-                        <Marker key={index} coordinate={marker.coordinate}>
-                            <Animated.View style={[styles.markerWrap]}>
-                                <Animated.Image
-                                    source={require('../assets/images/marker.png')}
-                                    style={[styles.marker, scaleStyle]}
-                                    resizeMode="cover"
-                                />
-                            </Animated.View>
-                            <Callout tooltip>
-                                <View>
-                                    <View style={{height: 80, width: 260, flexDirection: 'row', borderRadius: 20, borderColor: '#03DAC5', borderWidth: 1, alignSelf:'baseline', overflow: 'hidden', backgroundColor: '#303030'}}>
-                                        <View style={{alignItems: 'center', flexDirection: 'row'}}>
-                                            <View style={{width: 55, height: 55, backgroundColor: '#E4FFF9', borderRadius: 12, margin: 12, alignItems: 'center', justifyContent: 'center'}}>
-                                                <Text style={{fontFamily: "Roboto_700Bold", fontSize: 14, color: "#03DAC5"}}>DEC</Text>
-                                                <Text style={{fontFamily: "Roboto_500Medium", fontSize: 14}}>14</Text>
-                                            </View>
-                                            <View>
-                                                <Text style={{fontFamily: "Roboto_700Bold", color: '#fff', fontSize: 15, marginBottom: 5}}>NAME</Text>
+                {/*            }*/}
+                {/*        ]*/}
+                {/*    }*/}
+                {/*    return (*/}
+                {/*        <Marker key={index} coordinate={marker.coordinate}>*/}
+                {/*            <Animated.View style={[styles.markerWrap]}>*/}
+                {/*                <Animated.Image*/}
+                {/*                    source={require('../assets/images/marker.png')}*/}
+                {/*                    style={[styles.marker, scaleStyle]}*/}
+                {/*                    resizeMode="cover"*/}
+                {/*                />*/}
+                {/*            </Animated.View>*/}
+                {/*            <Callout tooltip>*/}
+                {/*                <View>*/}
+                {/*                    <View style={{height: 80, width: 260, flexDirection: 'row', borderRadius: 20, borderColor: '#03DAC5', borderWidth: 1, alignSelf:'baseline', overflow: 'hidden', backgroundColor: '#303030'}}>*/}
+                {/*                        <View style={{alignItems: 'center', flexDirection: 'row'}}>*/}
+                {/*                            <View style={{width: 55, height: 55, backgroundColor: '#E4FFF9', borderRadius: 12, margin: 12, alignItems: 'center', justifyContent: 'center'}}>*/}
+                {/*                                <Text style={{fontFamily: "Roboto_700Bold", fontSize: 14, color: "#03DAC5"}}>DEC</Text>*/}
+                {/*                                <Text style={{fontFamily: "Roboto_500Medium", fontSize: 14}}>14</Text>*/}
+                {/*                            </View>*/}
+                {/*                            <View>*/}
+                {/*                                <Text style={{fontFamily: "Roboto_700Bold", color: '#fff', fontSize: 15, marginBottom: 5}}>NAME</Text>*/}
 
-                                                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                                                    <View>
-                                                        <Text style={{color: '#fff'}}>Chicago Stadium</Text>
-                                                        <Text style={{color: '#03DAC5'}}>1901 W Madison St</Text>
-                                                    </View>
-                                                </View>
-                                            </View>
-                                        </View>
-                                    </View>
-                                    <View style={styles.arrowBorder}/>
-                                    <View style={styles.arrow}/>
-                                </View>
-                            </Callout>
-                        </Marker>
-                    );
-                })}
-                <Marker draggable
-                        coordinate={{latitude: latitude,
-                            longitude: longitude}}
-                >
-
-                </Marker>
+                {/*                                <View style={{flexDirection: 'row', alignItems: 'center'}}>*/}
+                {/*                                    <View>*/}
+                {/*                                        <Text style={{color: '#fff'}}>Chicago Stadium</Text>*/}
+                {/*                                        <Text style={{color: '#03DAC5'}}>1901 W Madison St</Text>*/}
+                {/*                                    </View>*/}
+                {/*                                </View>*/}
+                {/*                            </View>*/}
+                {/*                        </View>*/}
+                {/*                    </View>*/}
+                {/*                    <View style={styles.arrowBorder}/>*/}
+                {/*                    <View style={styles.arrow}/>*/}
+                {/*                </View>*/}
+                {/*            </Callout>*/}
+                {/*        </Marker>*/}
+                {/*    );*/}
+                {/*})}*/}
             </MapView>
             <View style={styles.searchBox}>
                 <TextInput

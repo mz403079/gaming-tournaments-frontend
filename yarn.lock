@@ -6880,6 +6880,13 @@
     "jscodeshift" "^0.11.0"
     "nullthrows" "^1.1.1"
 
+"react-native-dotenv@^3.3.1":
+  "integrity" "sha512-gAKXout1XCwCqJ3QPGoQAF2eRzOHgOnwg3x19z+ssow8bDIksJeKBqvoHDyGziVilAIP1J0bEC9Jf+VF8nFang=="
+  "resolved" "https://registry.npmjs.org/react-native-dotenv/-/react-native-dotenv-3.3.1.tgz"
+  "version" "3.3.1"
+  dependencies:
+    "dotenv" "^10.0.0"
+
 "react-native-geocoder-reborn@^0.9.0":
   "integrity" "sha512-SsaimqzbUo5RQsuv/othHVK0dv98oThX/0LjpNgP6z0znkVJdMYlT0me5DP9hwcznduEp8FFcMVEnWVGhOz63w=="
   "resolved" "https://registry.npmjs.org/react-native-geocoder-reborn/-/react-native-geocoder-reborn-0.9.0.tgz"

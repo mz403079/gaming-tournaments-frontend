@@ -18,6 +18,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { FontAwesome } from "@expo/vector-icons";
 import { ScrollView } from "react-native-gesture-handler";
 
+
 const CreateTournament = () => {
   const [user, setUser] = useState({
     userId: 0,
