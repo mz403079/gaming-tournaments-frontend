@@ -21,7 +21,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import {Avatar, Caption, Title, TouchableRipple} from "react-native-paper";
 import GameAccount from "../components/GameAccount";
 import {isLoaded} from "expo-font";
-import {GetId, AddGameAccount, DeleteGameAccount} from "../services/";
+import {GetId, AddGameAccount, DeleteGameAccount, GetUsername, GetName, GetSurname, GetEmail} from "../services/";
 import ActionButton from "react-native-action-button";
 
 interface game {
@@ -52,6 +52,12 @@ const GameAccountsScreen = () => {
     const [gameAccounts, setGameAccounts] = useState<gameAccount[]>([]);
     const [refeshKey, setRefreshKey] = useState(0);
     const [loading, setLoading] = useState(true);
+    //userinfo
+    const [userName, setUserName] = useState<string>('');
+    const [userSurname, setUserSurname] = useState<string>('');
+    const [userEmail, setUserEmail] = useState<string>('');
+    const [userNickname, setUserNickname] = useState<string>('');
+
     let getGames = () => {
         fetch(gamesURL)
             .then((response) => response.json())
@@ -70,6 +76,10 @@ const GameAccountsScreen = () => {
         getGames();
         getGameAccounts();
         GetId().then((res) => setUserId(res));
+        GetUsername().then((res) => setUserNickname(res));
+        GetName().then((res) => setUserName(res));
+        GetSurname().then((res) => setUserSurname(res));
+        GetEmail().then((res) => setUserEmail(res));
     }, []);
 
     useEffect(() => {
@@ -185,7 +195,7 @@ const GameAccountsScreen = () => {
                         <Icon name="close" size={24} color='white'/>
                     </Pressable>
                     <Pressable style={[styles.buttonClose]} onPress={addMore}>
-                        <Text style={{color: '#121212', fontSize: '16', paddingHorizontal: 12}}>Add game account</Text>
+                        <Text style={{color: '#121212', fontSize: 16, paddingHorizontal: 12}}>Add game account</Text>
                     </Pressable>
                 </View>
             </Modal>
@@ -207,9 +217,9 @@ const GameAccountsScreen = () => {
                                 },
                             ]}
                         >
-                            Jan Kowalski
+                            {userName + ' ' + userSurname}
                         </Title>
-                        <Caption style={styles.caption}>@hasan</Caption>
+                        <Caption style={styles.caption}>@{userNickname}</Caption>
                     </View>
                 </View>
             </View>

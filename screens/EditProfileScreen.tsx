@@ -255,7 +255,7 @@ const EditProfileScreen = () => {
               color: "#fff",
             }}
           >
-            Jan Kowalski
+            {user.name + ' ' + user.surname}
           </Text>
         </View>
 

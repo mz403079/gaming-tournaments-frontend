@@ -7,14 +7,14 @@ import {
     ImageBackground,
     Dimensions,
     Platform,
-    TouchableOpacity,
+    TouchableOpacity, Animated,
 } from 'react-native';
 import styled from 'styled-components/native'
 import {LinearGradient} from "expo-linear-gradient";
 const { width, height } = Dimensions.get('window');
 import { COLORS, SIZES, FONTS } from '../constants';
 import moment from "moment";
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
+import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps'
 import {Line} from "react-native-svg";
 import {mapDarkStyle} from "../model/mapData";
 const EventDetail = ({ navigation, route }) => {
@@ -26,6 +26,13 @@ const EventDetail = ({ navigation, route }) => {
         setSelectedEvent(selectedEvent)
         navigation.setOptions({tabBarVisible: false})
     }, [])
+
+    const Region = {
+        latitude: selectedEvent?.lat,
+        longitude: selectedEvent?.lng,
+        latitudeDelta: 0.007,
+        longitudeDelta: 0.007 * (SIZES.width / SIZES.height),
+    }
 
 
     return (
@@ -133,6 +140,17 @@ const EventDetail = ({ navigation, route }) => {
                             initialRegion={Region}
                             customMapStyle={mapDarkStyle}
                             pointerEvents="none">
+                            <Marker
+                                coordinate={{latitude: selectedEvent?.lat, longitude: selectedEvent?.lng}}
+                            >
+                                <Animated.View style={[styles.markerWrap]}>
+                                    <Animated.Image
+                                        source={require('../assets/images/marker.png')}
+                                        style={[styles.marker]}
+                                        resizeMode="cover"
+                                    />
+                                </Animated.View>
+                            </Marker>
                         </MapView>
                     </View>
                     <View style={{paddingBottom: 150}}/>
@@ -269,6 +287,16 @@ const styles = StyleSheet.create({
         backgroundColor: '#000',
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    markerWrap: {
+        alignItems: "center",
+        justifyContent: "center",
+        width: 50,
+        height: 50,
+    },
+    marker: {
+        width: 40,
+        height: 40,
     },
 });
 
