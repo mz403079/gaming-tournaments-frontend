@@ -70,18 +70,22 @@ const CreateTournament = () => {
         "-" +
         (tournamentEnd.getMonth() + 1) +
         "-" +
-        tournamentEnd.getDay();
+        tournamentEnd.getDate();
     let stringStart =
         tournamentStart.getFullYear() +
         "-" +
         (tournamentStart.getMonth() + 1) +
         "-" +
-        tournamentStart.getDay() +
+        tournamentStart.getDate() +
         " " +
         tournamentStart.getHours() +
         ":" +
         tournamentStart.getMinutes();
     let address = data.city + ' ' + data.street
+    console.log(tournamentEnd)
+    console.log(tournamentStart)
+    console.log("indor",stringEnd)
+    console.log(stringStart)
     console.log("LATITUDE", latitude)
     console.log("LONGITUDE", longitude)
     AddTournament({

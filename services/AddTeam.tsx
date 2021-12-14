@@ -1,28 +1,17 @@
-interface UserData {
-    userId: number
+interface tournamentData {
+    tournamentId: number | undefined
 }
 interface FormData {
-    name: string
-    tournamentStart: string
-    description?: string
-    tournamentEnd: string
-    maxTeamSize: number
-    maxNumberOfTeams: number
-    reward: number
-    isLan: boolean
-    city: string
-    street: string
-    regulations: string
-    organizer: UserData
-    lat: number
-    lng: number
+    teamName: string
+    tournament: tournamentData
+    players: string[]
   }
   
   const AddTournament = async (data: FormData) => {
       console.log(data)
     try {
       const response = await fetch(
-        "https://gen-gg.herokuapp.com/api/addTournament",
+        "https://gen-gg.herokuapp.com/api/addTeam",
         {
           method: "POST",
           headers: {
@@ -33,6 +22,8 @@ interface FormData {
         }
       );
       const json = await response.json();
+      if(json.message)
+        return json.message
     } catch (error) {
       console.error(error);
     }
