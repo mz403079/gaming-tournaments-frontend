@@ -183,7 +183,7 @@ class SearchBar extends React.Component {
         const renderList = ({item, index}: { item: TournamentProps, index: any }) => {
             console.log(item.name);
             return (
-                <TouchableOpacity onPress={() => {this.props.navigate('CreateTournament')}}>
+                <TouchableOpacity onPress={() => {this.props.navigate('TournamentDetails', {selectedEvent: item})}}>
                     <SearchListItem name={item.name}
                               currentNumberOfTeams={item.currentNumberOfTeams}
                               description={item.description}

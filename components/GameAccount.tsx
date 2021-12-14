@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import {Animated, Text, TouchableOpacity, StyleSheet, Image, Dimensions, Platform, UIManager, View} from 'react-native'
+import {LinearGradient} from "expo-linear-gradient";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 const width = Dimensions.get('window').width;
 
@@ -65,8 +67,14 @@ export default class GameAccount extends Component <any, any> {
                 styles.viewHolder, {
                     transform: [{ translateX: translateAnimation }],
                     opacity: opacityAnimation
-                }]}
-            >
+                }]}>
+                <LinearGradient
+                colors={['transparent', '#121212']}
+                start={{x: 0, y: 0}}
+                end={{x: 1.5, y: 0}}
+                style={[
+                    { width: '100%', justifyContent: 'flex-end'}, styles.viewHolderGradient]
+                }>
                 <Text
                     style={styles.displayText}>
                     {this.props.item.game.name} :  {this.props.item.inGameName}
@@ -76,11 +84,9 @@ export default class GameAccount extends Component <any, any> {
                         style={styles.removeBtn}
                         onPress={this.removeItem}
                     >
-                        <Image
-                            source={require('../assets/images/deleteButton.png')}
-                            style={styles.btnImage}
-                        />
+                        <Icon name="trash-can-outline" style={{height: 22, fontSize: 25, color: 'white'}}/>
                     </TouchableOpacity>
+            </LinearGradient>
             </Animated.View>
         );
     }
@@ -89,11 +95,18 @@ export default class GameAccount extends Component <any, any> {
 const styles = StyleSheet.create(
     {
         viewHolder: {
-            paddingVertical: 15,
-            backgroundColor: '#2196f3',
+
+            backgroundColor: '#03DAC5',
             justifyContent: 'center',
             alignItems: 'flex-start',
             margin: 4,
+            borderRadius: 10
+        },
+        viewHolderGradient: {
+            paddingVertical: 15,
+            backgroundColor: '#03DAC5',
+            justifyContent: 'center',
+            alignItems: 'flex-start',
             paddingLeft: 15,
             borderRadius: 10
         },
@@ -110,10 +123,10 @@ const styles = StyleSheet.create(
             borderRadius: 15,
             justifyContent: 'center',
             alignItems: 'center',
-            backgroundColor: 'white'
         },
         btnImage: {
             resizeMode: 'contain',
             width: '100%',
+            color: 'white'
         },
     });

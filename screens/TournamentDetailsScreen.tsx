@@ -202,7 +202,6 @@ const LocationSection = styled.View`
   
 `;
 
-
 const SectionImageFooter = styled.View`
     flex: 1;
     justify-content: flex-end;

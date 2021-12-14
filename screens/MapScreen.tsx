@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from "react";
+import { useFocusEffect } from '@react-navigation/native'
 import {
     StyleSheet,
     Text,
@@ -28,13 +29,13 @@ const CARD_HEIGHT = 220;
 const CARD_WIDTH = width * 0.8;
 const SPACING_FOR_CARD_INSET = width * 0.1 - 10;
 
-const MapScreen = () => {
+const MapScreen = ( {navigation}) => {
     const [shouldShow, setShouldShow] = useState(true);
     const [location, setLocation] = useState(null);
     const [userLatitude, setUserLatitude] = useState(null);
     const [userLongitude, setUserLongitude] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
-    const [isLoading, setLoading] = useState(true);
+    const [isLoading, setLoading] = useState(false);
     const [tournaments, setTournaments] = useState([]);
 
     const tournamentsURL = 'https://gen-gg.herokuapp.com/api/getTournaments';
@@ -88,10 +89,12 @@ const MapScreen = () => {
     let mapAnimation = new Animated.Value(0);
 
 
-    useEffect(() => {
-        getTournaments()
-        console.log(tournaments)
-
+    useFocusEffect(
+        React.useCallback(() => {
+            getTournaments()
+            console.log(tournaments)
+        }, [])
+    );
         // mapAnimation.addListener(({ value }) => {
         //     let index = Math.floor(value / CARD_WIDTH + 0.3); // animate 30% away from landing on the next item
         //     if (index >= state.tournaments.length) {
@@ -120,7 +123,7 @@ const MapScreen = () => {
         //     }, 10);
         //
         // });
-    }, []);
+
 
     const mapMarkers = () => {
         return tournaments.map((tournament) => <Marker
@@ -335,7 +338,9 @@ const MapScreen = () => {
             </ScrollView>
 
             <ActionButton buttonColor="#03DAC5">
-                <ActionButton.Item buttonColor='#6200EE' title="Create new event" onPress={() => setShouldShow(true)}>
+                <ActionButton.Item buttonColor='#6200EE' title="Create new tournament" onPress={() => {
+                    navigation.navigate('CreateTournament')
+                }}>
                     <Icon name="md-create" style={styles.actionButtonIcon}/>
                 </ActionButton.Item>
             </ActionButton>

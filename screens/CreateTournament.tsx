@@ -17,6 +17,7 @@ import { AddTournament, GetId } from "../services";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { FontAwesome } from "@expo/vector-icons";
 import { ScrollView } from "react-native-gesture-handler";
+import config from "../config"
 
 
 const CreateTournament = () => {
@@ -70,18 +71,17 @@ const CreateTournament = () => {
         "-" +
         (tournamentEnd.getMonth() + 1) +
         "-" +
-        tournamentEnd.getDay();
+        tournamentEnd.getDate();
     let stringStart =
         tournamentStart.getFullYear() +
         "-" +
         (tournamentStart.getMonth() + 1) +
         "-" +
-        tournamentStart.getDay() +
+        tournamentStart.getDate() +
         " " +
         tournamentStart.getHours() +
         ":" +
         tournamentStart.getMinutes();
-    let address = data.city + ' ' + data.street
     console.log("LATITUDE", latitude)
     console.log("LONGITUDE", longitude)
     AddTournament({
@@ -198,7 +198,7 @@ const CreateTournament = () => {
       "method": "GET",
       "headers": {
         "x-rapidapi-host": "google-maps-geocoding.p.rapidapi.com",
-        "x-rapidapi-key": "niema"
+        "x-rapidapi-key": config.REACT_APP_GOOGLE_API_KEY
       }
     })
         .then(response => response.json())
