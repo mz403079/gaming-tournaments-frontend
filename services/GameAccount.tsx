@@ -22,6 +22,8 @@ export const AddGameAccount = async (data: gameAccount, id: number) => {
       }
     );
     const json = await response.json();
+    if(json.message)
+      return json.message
   } catch (error) {
     console.error(error);
   }

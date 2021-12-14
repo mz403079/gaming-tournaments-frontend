@@ -33,6 +33,8 @@ interface FormData {
         }
       );
       const json = await response.json();
+      if(json.message)
+        return json.message
     } catch (error) {
       console.error(error);
     }

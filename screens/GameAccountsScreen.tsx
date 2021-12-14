@@ -80,6 +80,14 @@ const GameAccountsScreen = () => {
         setIndex(index + 1);
         setState({...state, disabled: false});
     };
+
+    const handleResponse = (response: string) => {
+        if(response === "name taken")
+            Alert.alert("This account is already connected!");
+        else
+            setRefreshKey(refeshKey + 1);
+    }
+
     const addMore = () => {
         if (state.gameName == "" || state.nickname == "") {
             Alert.alert("Account data cannot be empty");
@@ -92,12 +100,19 @@ const GameAccountsScreen = () => {
                 game: {gameId: state.gameId, name: state.gameName},
             },
             userId
-        ).then(() => setRefreshKey(refeshKey + 1));
+        ).then((response) => handleResponse(response))
+          
 
         setModalVisible(false);
     };
+    
+    const filteredGames = () => {
+        const result = gameAccounts.map(({ game }) => game.name)
+        const difference = games.filter(x => !result.includes(x.name))
 
-    function remove(id: number) {
+        return difference
+    }
+    const remove = (id: number) => {
         DeleteGameAccount(id).then(() => setRefreshKey(refeshKey + 1));
     }
 
@@ -134,7 +149,7 @@ const GameAccountsScreen = () => {
                         <Text style={[styles.modalText, {fontSize: 18, paddingRight: 15, paddingBottom: 20}]}>Game: </Text>
 
                         <ModalSelector
-                            data={games}
+                            data={filteredGames()}
                             keyExtractor={(item) => item.gameId}
                             labelExtractor={(item) => item.name}
                             initValue="Select your game"
@@ -185,7 +200,7 @@ const GameAccountsScreen = () => {
                         <Icon name="close" size={24} color='white'/>
                     </Pressable>
                     <Pressable style={[styles.buttonClose]} onPress={addMore}>
-                        <Text style={{color: '#121212', fontSize: '16', paddingHorizontal: 12}}>Add game account</Text>
+                        <Text style={{color: '#121212', fontSize: 16, paddingHorizontal: 12}}>Add game account</Text>
                     </Pressable>
                 </View>
             </Modal>
