@@ -203,6 +203,7 @@ const CreateTournament = () => {
     })
         .then(response => response.json())
         .then(response => {
+          console.log(response)
           setLatitude(response.results[0].geometry.location.lat)
           setLongitude(response.results[0].geometry.location.lng)
         })
