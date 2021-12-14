@@ -1,13 +1,17 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     StyleSheet,
     View,
     Text,
     StatusBar,
+    Animated,
     Dimensions,
     TouchableOpacity, Platform,
 } from 'react-native';
 import ReactNativeParallaxHeader from 'react-native-parallax-header';
+import {GetEmail, GetId, GetName, GetSurname, GetUsername} from "../services";
+
+
 
 const {height: SCREEN_HEIGHT} = Dimensions.get('window');
 
@@ -15,6 +19,7 @@ const IS_IPHONE_X = SCREEN_HEIGHT === 812 || SCREEN_HEIGHT === 896;
 const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? (IS_IPHONE_X ? 44 : 20) : 0;
 const HEADER_HEIGHT = Platform.OS === 'ios' ? (IS_IPHONE_X ? 88 : 64) : 64;
 const NAV_BAR_HEIGHT = HEADER_HEIGHT - STATUS_BAR_HEIGHT;
+
 
 const renderNavBar = () => (
     <View style={styles.navContainer}>
@@ -30,19 +35,7 @@ const renderNavBar = () => (
     </View>
 );
 
-const renderContent = () => {
-    return (
-        <View style={styles.body}>
-            {Array.from(Array(30).keys()).map((i) => (
-                <View
-                    key={i}
-                    style={{padding: 15, alignItems: 'center', justifyContent: 'center'}}>
-                    <Text>Item {i + 1}</Text>
-                </View>
-            ))}
-        </View>
-    );
-};
+
 
 const title = () => {
     return (
@@ -52,7 +45,50 @@ const title = () => {
     );
 };
 
+interface ranking {
+    userId: number,
+    username: string,
+    name: string,
+    surname: string,
+    crowns: number,
+}
 const RankingScreen = () => {
+    const [ranking, setRanking] = useState<ranking[]>([]);
+    const rankingURL = "https://gen-gg.herokuapp.com/api/getRanking"
+
+
+    let getRanking = () => {
+        fetch(rankingURL)
+            .then((response) => response.json())
+            .then((json) => setRanking(json))
+            .catch((error) => console.error(error));
+    };
+
+    const renderContent = () => {
+        return (
+            <View style={styles.body}>
+                {ranking.map((rank, index) => (
+                    <View
+                    key={rank.userId}
+                    style={{padding: 15, alignItems: 'center', justifyContent: 'space-between', flexDirection: 'row', backgroundColor: '#121212'}}>
+                    <Text style={{fontSize: 16, color: 'white'}}>{index+1 + '. ' + rank.username}</Text>
+                        <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+                            <Text style={{fontSize: 18, color: 'white', fontFamily: 'Roboto_700Bold'}}>{rank.crowns}</Text>
+                            <Animated.Image
+                                source={require('../assets/images/king.png')}
+                                style={[styles.crown]}
+                                resizeMode="cover"
+                            />
+                        </View>
+                    </View>
+                    ))}
+            </View>
+        );
+    };
+
+    useEffect(() => {
+        getRanking();
+    }, []);
     return (
         <>
             <StatusBar barStyle="light-content" />
@@ -106,6 +142,11 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: 'bold',
         fontSize: 18,
+    },
+    crown: {
+        width: 30,
+        height: 30,
+        marginLeft: 10
     },
 });
 

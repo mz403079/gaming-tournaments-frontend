@@ -50,7 +50,9 @@ type TournamentProps = {
     teams: [],
     tournamentEnd: string,
     tournamentId: number,
-    tournamentStart: string;
+    tournamentStart: string,
+    city: string,
+    street: string
 }
 const HomeScreen = ({ navigation }) => {
     const {navigate} = useNavigation();
@@ -89,7 +91,10 @@ const HomeScreen = ({ navigation }) => {
                              teams={item.teams}
                              tournamentEnd={item.tournamentEnd}
                              tournamentId={item.tournamentId}
-                             tournamentStart={item.tournamentStart}/>
+                             tournamentStart={item.tournamentStart}
+                             city={item.city}
+                             street={item.street}
+        />
         </TouchableOpacity>
         )}
     const renderList = ({item, index}: { item: TournamentProps, index: any }) => {
@@ -108,7 +113,8 @@ const HomeScreen = ({ navigation }) => {
                              tournamentEnd={item.tournamentEnd}
                              tournamentId={item.tournamentId}
                              tournamentStart={item.tournamentStart}
-
+                             city={item.city}
+                             street={item.street}
 
             />
         </TouchableOpacity>

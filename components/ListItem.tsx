@@ -16,8 +16,10 @@ type TournamentProps = {
     tournamentEnd: string,
     tournamentId: number,
     tournamentStart: string;
+    city: string,
+    street: string
 }
-const ListItem: FC<TournamentProps> = ({name, tournamentStart}) => {
+const ListItem: FC<TournamentProps> = ({name, tournamentStart, city, street}) => {
     let momentObj = moment(tournamentStart, 'YYYY-MM-DD h:mm');
     let month = moment(momentObj).format('MMM').toUpperCase();
     let day = moment(momentObj).format('DD').toUpperCase();
@@ -54,8 +56,8 @@ const ListItem: FC<TournamentProps> = ({name, tournamentStart}) => {
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <Marker width={20} height={20} style={{height: 24, width: 24, marginRight: 5}}/>
                     <View>
-                        <Text style={{color: '#fff', fontSize: 13}}>Chicago Stadium</Text>
-                        <Text style={{color: '#03DAC5', fontSize: 13}}>1901 W Madison St</Text>
+                        <Text style={{color: '#fff', fontSize: 13}}>{street}</Text>
+                        <Text style={{color: '#03DAC5', fontSize: 13}}>{city}</Text>
                     </View>
                 </View>
             </View>

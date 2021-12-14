@@ -189,8 +189,8 @@ const MapScreen = ( {navigation}) => {
 
                                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                                     <View>
-                                        <Text style={{color: '#fff'}}>Chicago Stadium</Text>
-                                        <Text style={{color: '#03DAC5'}}>1901 W Madison St</Text>
+                                        <Text style={{color: '#fff'}}>{tournament.street}</Text>
+                                        <Text style={{color: '#03DAC5'}}>{tournament.city}</Text>
                                     </View>
                                 </View>
                             </View>

@@ -14,10 +14,12 @@ type TournamentProps = {
     teams: [],
     tournamentEnd: string,
     tournamentId: number,
-    tournamentStart: string;
+    tournamentStart: string,
+    city: string,
+    street: string,
 }
 
-const BannerSlider: FC<TournamentProps> = ({ name, tournamentStart}) => {
+const BannerSlider: FC<TournamentProps> = ({ name, tournamentStart, city, street}) => {
     let momentObj = moment(tournamentStart, 'YYYY-MM-DD h:mm');
     let month = moment(momentObj).format('MMM').toUpperCase();
     let day = moment(momentObj).format('DD').toUpperCase();
@@ -35,8 +37,8 @@ const BannerSlider: FC<TournamentProps> = ({ name, tournamentStart}) => {
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
                         <Marker width={24} height={24} style={{height: 24, width: 24, marginRight: 5}}/>
                         <View>
-                            <Text style={{color: '#fff'}}>Chicago Stadium</Text>
-                            <Text style={{color: '#03DAC5'}}>1901 W Madison St</Text>
+                            <Text style={{color: '#fff'}}>{street}</Text>
+                            <Text style={{color: '#03DAC5'}}>{city}</Text>
                         </View>
                     </View>
                 </View>
