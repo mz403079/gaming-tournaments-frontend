@@ -25,7 +25,9 @@ interface Tournament {
     tournamentEnd: string
     maxTeamSize: number
     maxNumberOfTeams: number
+    currentNumberOfTeams: number
     reward: number
+    winner: string
     isLan: boolean
     city: string
     street: string
@@ -136,8 +138,25 @@ const EventDetail = ({ navigation, route }) => {
                     </TouchableOpacity>
                 </ButtonSection>
                 <DescriptionSection>
+                <McText body3>
+                    { "Tournament Organizer: " + selectedEvent?.organizer.name + " " + selectedEvent?.organizer.surname } 
+                        
+                    </McText>
+                    <View
+  style={{
+    borderBottomColor: 'white',
+    marginTop: 5,
+    marginBottom: 10,
+    borderBottomWidth: 1,
+  }}
+/>
                     <McText body3>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer varius urna at venenatis pulvinar. Integer mauris sem, consequat id ultrices in, finibus ac mauris.
+                        {selectedEvent?.winner ? (
+                            "Tournament winner: " +selectedEvent?.winner
+                            )
+                             : (selectedEvent?.description ? selectedEvent?.description : 
+                                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley") }
+                        
                     </McText>
                 </DescriptionSection>
                 <LocationSection>
@@ -181,16 +200,17 @@ const EventDetail = ({ navigation, route }) => {
                     marginHorizontal: 30
                 }}>
                     <View>
-                        <McText style={{opacity: 0.5, letterSpacing: 1, fontFamily: 'Roboto_500Medium'}}>PRICE</McText>
+                        <McText style={{opacity: 0.5, letterSpacing: 1, fontFamily: 'Roboto_500Medium'}}>Teams</McText>
                         <View style={{
                             flexDirection: 'row',
                             justifyContent: 'flex-end',
                             alignItems: 'flex-end'}}>
-                            <McText h2 style={{color: '#03DAC5', fontFamily: 'Roboto_500Medium'}}>Free</McText>
-                            <McText h3> /person</McText>
+                            <McText h2 style={{color: '#03DAC5', fontFamily: 'Roboto_500Medium'}}>{selectedEvent?.currentNumberOfTeams}</McText>
+                            <McText h3> /{selectedEvent?.maxNumberOfTeams}</McText>
                         </View>
                     </View>
                         <TouchableOpacity
+                            disabled={selectedEvent?.winner !== null}
                             onPress={()=>{navigation.navigate('RegistrationForTournaments', {selectedEvent})}}>
                             <LinearGradient
                                 colors={['#03DAC5', '#03DAC5']}
@@ -208,7 +228,7 @@ const EventDetail = ({ navigation, route }) => {
                                     justifyContent: 'center',
                                     alignItems: 'center'
                                 }}>
-                                    <McText h3>Get ticket</McText>
+                                    <McText h3>Sign Up</McText>
 
                                 </View>
                             </LinearGradient>

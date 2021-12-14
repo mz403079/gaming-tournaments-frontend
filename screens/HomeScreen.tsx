@@ -46,6 +46,7 @@ type TournamentProps = {
     maxNumberOfTeams: number,
     maxTeamSize: number,
     reward: string,
+    winner: string,
     rules: string,
     teams: [],
     tournamentEnd: string,

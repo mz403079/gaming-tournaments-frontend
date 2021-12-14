@@ -10,6 +10,7 @@ import {
   StyleSheet,
   StatusBar,
   Platform,
+  Alert
 } from "react-native";
 import * as Animatable from "react-native-animatable";
 import { InputField } from "../components/UI";
@@ -20,7 +21,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import config from "../config"
 
 
-const CreateTournament = () => {
+const CreateTournament = ({ navigation, route }) => {
   const [user, setUser] = useState({
     userId: 0,
   });
@@ -63,7 +64,14 @@ const CreateTournament = () => {
   const [statusApi, setStatusApi] = React.useState()
   const [latitude, setLatitude] = useState(0);
   const [longitude, setLongitude] = useState(0);
-
+  const handleResponse = (val: string) => {
+    if(val === "same name")
+      Alert.alert("Tournament with same name already exists, use different name.")
+    else {
+      Alert.alert("Tournament successfuly created!")
+      navigation.navigate("Home")
+    }
+  }
   function submitForm() {
     let {tournamentEnd, tournamentStart} = data;
     let stringEnd =
@@ -82,8 +90,19 @@ const CreateTournament = () => {
         tournamentStart.getHours() +
         ":" +
         tournamentStart.getMinutes();
-    console.log("LATITUDE", latitude)
-    console.log("LONGITUDE", longitude)
+
+    const {nameError, maxNumberOfTeamsError, } = errorMessages
+    const errors = [errorMessages.nameError, errorMessages.apiError, errorMessages.cityError, errorMessages.maxNumberOfTeamsError,
+      errorMessages.maxTeamSizeError, errorMessages.rewardError, errorMessages.streetError,
+      errorMessages.tournamentEndError, errorMessages.tournamentStartError]
+    let ok = true
+    errors.map((error => {
+      if(error !== "") {
+          ok = false
+      }
+  }))
+
+    if(ok)
     AddTournament({
       name: data.name,
       description: data.description,
@@ -99,7 +118,7 @@ const CreateTournament = () => {
       tournamentEnd: stringEnd,
       lat: latitude,
       lng: longitude,
-    })
+    }).then((response) => handleResponse(response))
   }
   function validateForm() {
     const {
@@ -114,7 +133,7 @@ const CreateTournament = () => {
       street,
       regulations,
     } = data;
-
+ 
     setErrorMessages({
       ...errorMessages,
       nameError: name.length > 0 ? "" : "This field is required",
@@ -133,11 +152,7 @@ const CreateTournament = () => {
       apiError: statusApi == "OK" ? "": "Incorrect address"
     });
   }
-  function parseJson(response: any){
-    console.log("RESPONSE ", response)
-    setCoordinates(response.results.geometry.location)
-    setStatusApi(response.status)
-  }
+
   useEffect(() => {
     validateForm();
   }, [data]);
@@ -203,9 +218,9 @@ const CreateTournament = () => {
     })
         .then(response => response.json())
         .then(response => {
-          console.log(response)
           setLatitude(response.results[0].geometry.location.lat)
           setLongitude(response.results[0].geometry.location.lng)
+          setStatusApi(response.status)
         })
         .catch(err => console.log(err))
   }
