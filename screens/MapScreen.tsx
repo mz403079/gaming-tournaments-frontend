@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from "react";
+import { useFocusEffect } from '@react-navigation/native'
 import {
     StyleSheet,
     Text,
@@ -18,21 +19,23 @@ import Fontisto from 'react-native-vector-icons/Fontisto';
 import ActionButton from 'react-native-action-button';
 import {mapDarkStyle} from '../model/mapData';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { useTheme } from '@react-navigation/native';
+import {useTheme} from '@react-navigation/native';
 import * as ImagePicker from "expo-image-picker";
 import * as Location from 'expo-location';
-const { width, height } = Dimensions.get("window");
+import moment from "moment";
+
+const {width, height} = Dimensions.get("window");
 const CARD_HEIGHT = 220;
 const CARD_WIDTH = width * 0.8;
 const SPACING_FOR_CARD_INSET = width * 0.1 - 10;
 
-const MapScreen = () => {
+const MapScreen = ( {navigation}) => {
     const [shouldShow, setShouldShow] = useState(true);
     const [location, setLocation] = useState(null);
     const [userLatitude, setUserLatitude] = useState(null);
     const [userLongitude, setUserLongitude] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
-    const [isLoading, setLoading] = useState(true);
+    const [isLoading, setLoading] = useState(false);
     const [tournaments, setTournaments] = useState([]);
 
     const tournamentsURL = 'https://gen-gg.herokuapp.com/api/getTournaments';
@@ -86,53 +89,123 @@ const MapScreen = () => {
     let mapAnimation = new Animated.Value(0);
 
 
+    useFocusEffect(
+        React.useCallback(() => {
+            getTournaments()
+            console.log(tournaments)
+        }, [])
+    );
+        // mapAnimation.addListener(({ value }) => {
+        //     let index = Math.floor(value / CARD_WIDTH + 0.3); // animate 30% away from landing on the next item
+        //     if (index >= state.tournaments.length) {
+        //         index = state.markers.length - 1;
+        //     }
+        //     if (index <= 0) {
+        //         index = 0;
+        //     }
+        //
+        //     clearTimeout(regionTimeout);
+        //
+        //     const regionTimeout = setTimeout(() => {
+        //         if( mapIndex !== index ) {
+        //             mapIndex = index;
+        //             const { coordinate } = state.markers[index];
+        //             // @ts-ignore
+        //             _map.current.animateToRegion(
+        //                 {
+        //                     ...coordinate,
+        //                     latitudeDelta: state.region.latitudeDelta,
+        //                     longitudeDelta: state.region.longitudeDelta,
+        //                 },
+        //                 350
+        //             );
+        //         }
+        //     }, 10);
+        //
+        // });
 
-    useEffect(() => {
-        getTournaments()
-        console.log(tournaments)
-        mapAnimation.addListener(({ value }) => {
-            let index = Math.floor(value / CARD_WIDTH + 0.3); // animate 30% away from landing on the next item
-            if (index >= state.tournaments.length) {
-                index = state.markers.length - 1;
-            }
-            if (index <= 0) {
-                index = 0;
-            }
-
-            clearTimeout(regionTimeout);
-
-            const regionTimeout = setTimeout(() => {
-                if( mapIndex !== index ) {
-                    mapIndex = index;
-                    const { coordinate } = state.markers[index];
-                    // @ts-ignore
-                    _map.current.animateToRegion(
-                        {
-                            ...coordinate,
-                            latitudeDelta: state.region.latitudeDelta,
-                            longitudeDelta: state.region.longitudeDelta,
-                        },
-                        350
-                    );
-                }
-            }, 10);
-
-        });
-    });
 
     const mapMarkers = () => {
         return tournaments.map((tournament) => <Marker
             key={tournament.id}
-            coordinate={{ latitude: tournament.lat, longitude: tournament.lng }}
+            coordinate={{latitude: tournament.lat, longitude: tournament.lng}}
             title={tournament.location}
             description={tournament.comments}
         >
-        </Marker >)
+            <Animated.View style={[styles.markerWrap]}>
+                <Animated.Image
+                    source={require('../assets/images/marker.png')}
+                    style={[styles.marker]}
+                    resizeMode="cover"
+                />
+            </Animated.View>
+            <Callout tooltip>
+                <View>
+                    <View style={{
+                        height: 80,
+                        width: 260,
+                        flexDirection: 'row',
+                        borderRadius: 20,
+                        borderColor: '#03DAC5',
+                        borderWidth: 1,
+                        alignSelf: 'baseline',
+                        overflow: 'hidden',
+                        backgroundColor: '#303030'
+                    }}>
+                        <View style={{alignItems: 'center', flexDirection: 'row'}}>
+                            <View style={{
+                                width: 55,
+                                height: 55,
+                                backgroundColor: '#E4FFF9',
+                                borderRadius: 12,
+                                margin: 12,
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}>
+                                <Text style={{fontFamily: "Roboto_700Bold", fontSize: 14, color: "#03DAC5"}}>
+                                    {
+                                        moment(
+                                            moment(
+                                                tournament.tournamentStart, 'YYYY-MM-DD h:mm')
+                                        ).format('MMM').toUpperCase()
+                                    }
+                                </Text>
+                                <Text style={{fontFamily: "Roboto_500Medium", fontSize: 14}}>
+                                    {
+                                        moment(
+                                            moment(
+                                                tournament.tournamentStart, 'YYYY-MM-DD h:mm')
+                                        ).format('DD').toUpperCase()
+                                    }
+                                </Text>
+                            </View>
+                            <View>
+                                <Text style={{
+                                    fontFamily: "Roboto_700Bold",
+                                    color: '#fff',
+                                    fontSize: 15,
+                                    marginBottom: 5
+                                }}>{tournament.name}</Text>
+
+                                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                                    <View>
+                                        <Text style={{color: '#fff'}}>Chicago Stadium</Text>
+                                        <Text style={{color: '#03DAC5'}}>1901 W Madison St</Text>
+                                    </View>
+                                </View>
+                            </View>
+                        </View>
+                    </View>
+                    <View style={styles.arrowBorder}/>
+                    <View style={styles.arrow}/>
+                </View>
+            </Callout>
+        </Marker>)
     }
 
     const interpolations = tournaments.map((marker, index) => {
         const inputRange = [
-            (index -1) * CARD_WIDTH,
+            (index - 1) * CARD_WIDTH,
             index * CARD_WIDTH,
             ((index + 1) * CARD_WIDTH),
         ];
@@ -142,14 +215,14 @@ const MapScreen = () => {
             extrapolate: "clamp"
         });
 
-        return { scale }
+        return {scale}
     });
 
     const _map = React.useRef(null);
 
     const onMarkerPress = (mapEventData) => {
         setShouldShow(true)
-        setTimeout( () => {
+        setTimeout(() => {
             const markerID = mapEventData._targetInst.return.index;
             let x = (markerID * CARD_WIDTH) + (markerID * 20);
             if (Platform.OS === 'ios') {
@@ -163,7 +236,7 @@ const MapScreen = () => {
 
     const onMapPress = (event: any) => {
         setShouldShow(false)
-        setTimeout( () => {
+        setTimeout(() => {
         }, 500)
     }
     const _scrollView = React.useRef(null);
@@ -237,40 +310,43 @@ const MapScreen = () => {
                     placeholder={"Search here"}
                     placeholderTextColor={"#000"}
                     autoCapitalize={"none"}
-                    style={{flex:1, padding: 5, marginLeft: 8}}/>
+                    style={{flex: 1, padding: 5, marginLeft: 8}}/>
                 <Ionicons name={"ios-search"} size={20}
-                          style={{marginRight: 10, display: 'flex', alignSelf:'center'}}/>
+                          style={{marginRight: 10, display: 'flex', alignSelf: 'center'}}/>
             </View>
             <ScrollView
-                    horizontal
-                    scrollEventThrottle={1}
-                    showsHorizontalScrollIndicator={false}
-                    height={50}
-                    style={styles.chipsScrollView}
-                    contentInset={{
-                        top: 0,
-                        left: 0,
-                        bottom: 0,
-                        right: 20
-                    }}
-                    contentContainerStyle={{
-                        paddingRight: Platform.OS == 'android' ? 20 : 0
-                    }}>
-                    {state.categories.map((category, index) => (
-                        <TouchableOpacity key={index} style={styles.chipsItem}>
-                            {/*{category.icon}*/}
-                            <Text>{category.name}</Text>
-                        </TouchableOpacity>
-                    ))}
-                </ScrollView>
+                horizontal
+                scrollEventThrottle={1}
+                showsHorizontalScrollIndicator={false}
+                height={50}
+                style={styles.chipsScrollView}
+                contentInset={{
+                    top: 0,
+                    left: 0,
+                    bottom: 0,
+                    right: 20
+                }}
+                contentContainerStyle={{
+                    paddingRight: Platform.OS == 'android' ? 20 : 0
+                }}>
+                {state.categories.map((category, index) => (
+                    <TouchableOpacity key={index} style={styles.chipsItem}>
+                        {/*{category.icon}*/}
+                        <Text>{category.name}</Text>
+                    </TouchableOpacity>
+                ))}
+            </ScrollView>
 
-            <ActionButton buttonColor="#03DAC5" >
-                <ActionButton.Item buttonColor='#6200EE' title="Create new event" onPress={() => setShouldShow(true)}>
-                    <Icon name="md-create" style={styles.actionButtonIcon} />
+            <ActionButton buttonColor="#03DAC5">
+                <ActionButton.Item buttonColor='#6200EE' title="Create new tournament" onPress={() => {
+                    navigation.navigate('CreateTournament')
+                }}>
+                    <Icon name="md-create" style={styles.actionButtonIcon}/>
                 </ActionButton.Item>
             </ActionButton>
         </View>
-    )};
+    )
+};
 
 export default MapScreen;
 
@@ -287,28 +363,28 @@ const styles = StyleSheet.create({
         position: 'absolute',
         width: 25,
         height: 25,
-        top:Dimensions.get('window').height/2,
-        left:Dimensions.get('window').width/2,
+        top: Dimensions.get('window').height / 2,
+        left: Dimensions.get('window').width / 2,
     },
     searchBox: {
-        position:'absolute',
+        position: 'absolute',
         marginTop: Platform.OS === 'ios' ? 55 : 30,
-        flexDirection:"row",
+        flexDirection: "row",
         backgroundColor: '#fff',
         width: '90%',
-        alignSelf:'center',
+        alignSelf: 'center',
         borderRadius: 25,
         padding: 8,
         shadowColor: '#ccc',
-        shadowOffset: { width: 0, height: 3 },
+        shadowOffset: {width: 0, height: 3},
         shadowOpacity: 0.5,
         shadowRadius: 5,
         elevation: 10,
     },
     chipsScrollView: {
-        position:'absolute',
-        top:Platform.OS === 'ios' ? 110 : 90,
-        paddingHorizontal:10
+        position: 'absolute',
+        top: Platform.OS === 'ios' ? 110 : 90,
+        paddingHorizontal: 10
     },
     chipsIcon: {
         marginRight: 5,
@@ -338,15 +414,15 @@ const styles = StyleSheet.create({
         marginTop: -0.5
     },
     chipsItem: {
-        flexDirection:"row",
-        backgroundColor:'#fff',
-        borderRadius:20,
-        padding:8,
-        paddingHorizontal:20,
-        marginHorizontal:10,
-        height:35,
+        flexDirection: "row",
+        backgroundColor: '#fff',
+        borderRadius: 20,
+        padding: 8,
+        paddingHorizontal: 20,
+        marginHorizontal: 10,
+        height: 35,
         shadowColor: '#ccc',
-        shadowOffset: { width: 0, height: 3 },
+        shadowOffset: {width: 0, height: 3},
         shadowOpacity: 0.5,
         shadowRadius: 5,
         elevation: 10,
@@ -370,7 +446,7 @@ const styles = StyleSheet.create({
         shadowColor: "#000",
         shadowRadius: 5,
         shadowOpacity: 0.3,
-        shadowOffset: { width: 2, height: -2 },
+        shadowOffset: {width: 2, height: -2},
         height: CARD_HEIGHT,
         width: CARD_WIDTH,
         overflow: "hidden",
@@ -400,8 +476,8 @@ const styles = StyleSheet.create({
     markerWrap: {
         alignItems: "center",
         justifyContent: "center",
-        width:50,
-        height:50,
+        width: 50,
+        height: 50,
     },
     marker: {
         width: 30,
@@ -413,7 +489,7 @@ const styles = StyleSheet.create({
     },
     signIn: {
         width: '100%',
-        padding:5,
+        padding: 5,
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 3

@@ -75,7 +75,9 @@ const HomeScreen = ({ navigation }) => {
 
     const carouselRef = useRef<Carousel<any>>(null)
     const renderBanner = ({ item, index}: { item: TournamentProps, index: any}) => {
-        return <BannerSlider
+        return (
+        <TouchableOpacity onPress={() => {navigation.navigate('TournamentDetails', {selectedEvent: item})}}>
+        <BannerSlider
                              name={item.name}
                              currentNumberOfTeams={item.currentNumberOfTeams}
                              description={item.description}
@@ -88,7 +90,8 @@ const HomeScreen = ({ navigation }) => {
                              tournamentEnd={item.tournamentEnd}
                              tournamentId={item.tournamentId}
                              tournamentStart={item.tournamentStart}/>
-    }
+        </TouchableOpacity>
+        )}
     const renderList = ({item, index}: { item: TournamentProps, index: any }) => {
         console.log(item.name);
         return (
