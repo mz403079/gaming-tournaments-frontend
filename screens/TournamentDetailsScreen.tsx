@@ -17,9 +17,26 @@ import moment from "moment";
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps'
 import {Line} from "react-native-svg";
 import {mapDarkStyle} from "../model/mapData";
+
+interface Tournament {
+    name: string
+    tournamentStart: string
+    description?: string
+    tournamentEnd: string
+    maxTeamSize: number
+    maxNumberOfTeams: number
+    reward: number
+    isLan: boolean
+    city: string
+    street: string
+    regulations: string
+    organizer: any
+    lat: number
+    lng: number
+  }
 const EventDetail = ({ navigation, route }) => {
 
-    const [selectedEvent, setSelectedEvent] = useState(null);
+    const [selectedEvent, setSelectedEvent] = useState<Tournament>();
 
     useEffect(() => {
         let {selectedEvent} = route.params;
@@ -205,7 +222,7 @@ const EventDetail = ({ navigation, route }) => {
 const SectionImageHeader = styled.View`
   flex: 1;
   justify-content: space-between;
-  margin-top: ${Platform.OS === 'is' ? '40px' : '20px'}
+  margin-top: ${Platform.OS === 'ios' ? '40px' : '20px'}
   margin-left: 30px;
   margin-right: 30px;
 `;

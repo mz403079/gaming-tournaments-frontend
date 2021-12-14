@@ -8,6 +8,7 @@ import {
     Dimensions,
     Platform,
     TouchableOpacity,
+    Alert
 } from 'react-native';
 import styled from 'styled-components/native'
 import {LinearGradient} from "expo-linear-gradient";
@@ -19,19 +20,72 @@ import {Line} from "react-native-svg";
 import {mapDarkStyle} from "../model/mapData";
 import * as Animatable from "react-native-animatable";
 import {InputField} from "../components/UI";
-import {FontAwesome} from "@expo/vector-icons";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import {AddTeam } from "../services"
+interface Tournament {
+    tournamentId: number
+    name: string
+    tournamentStart: string
+    description?: string
+    tournamentEnd: string
+    maxTeamSize: number
+    maxNumberOfTeams: number
+    reward: number
+    isLan: boolean
+    city: string
+    street: string
+    regulations: string
+    organizer: any
+    lat: number
+    lng: number
+  }
 const EventDetail = ({ navigation, route }) => {
 
-    const [selectedEvent, setSelectedEvent] = useState(null);
+    const [selectedEvent, setSelectedEvent] = useState<Tournament>();
 
     useEffect(() => {
         let {selectedEvent} = route.params;
         setSelectedEvent(selectedEvent)
         navigation.setOptions({tabBarVisible: false})
     }, [])
+    const [names, setNames] = useState<string[]>(new Array(selectedEvent?.maxTeamSize))
+    const [teamName, setTeamName] = useState("")
+    const handleResponse = (response: string) => {
+        if(response === "ok") {
+            Alert.alert("Your team was added to the " + selectedEvent?.name + ", Good luck!")
+            navigation.goBack(null)
+        }
+        else if(response === "team exists")
+            Alert.alert("Team with the same is already registered!")
+        else if(response === "no user")
+            Alert.alert("One of these players is not registered in our application!")
 
-
+    }
+    const addTeam = () => {
+        let ok = true
+        names.map((name => {
+            if(name.length < 6) {
+                Alert.alert("All names are required to have minimum 6 characters")
+                ok = false
+            }
+        }))
+        if(ok)
+        AddTeam(
+            {tournament: {tournamentId: selectedEvent?.tournamentId},
+            teamName:teamName,
+            players:names}).then((response) =>
+            handleResponse(response))
+    }
+ 
+    const updateNames = (index: number, val: string) => {
+      setNames(prev => {
+        let temp = [...prev]
+        temp[index] = val
+        return temp
+      })
+    }
+    const onChangeTeamName = (val: string) => {
+        setTeamName(val)
+    }
     return (
         <View style={styles.container}>
             <ScrollView
@@ -90,93 +144,28 @@ const EventDetail = ({ navigation, route }) => {
                         </SectionImageFooter>
                     </View>
                 </ImageBackground>
-                {/*<ButtonSection>*/}
-                {/*    <TouchableOpacity*/}
-                {/*        style={{*/}
-                {/*            width: 93,*/}
-                {/*            height: 32,*/}
-                {/*            marginRight: 16,*/}
-                {/*            borderRadius: 10,*/}
-                {/*            backgroundColor: 'white',*/}
-                {/*            justifyContent: 'center',*/}
-                {/*            alignItems: 'center'*/}
-                {/*        }}>*/}
-                {/*            <McText h6 style={{color: 'black'}}>ABOUT</McText>*/}
-                {/*    </TouchableOpacity>*/}
-                {/*    <TouchableOpacity*/}
-                {/*        style={{*/}
-                {/*            width: 100,*/}
-                {/*            height: 32,*/}
-                {/*            borderRadius: 10,*/}
-                {/*            backgroundColor: COLORS.input,*/}
-                {/*            justifyContent: 'center',*/}
-                {/*            alignItems: 'center'*/}
-                {/*        }}>*/}
-                {/*        <McText h6 style={{opacity:0.5, letterSpacing: 1}}>RULES</McText>*/}
-                {/*    </TouchableOpacity>*/}
-                {/*</ButtonSection>*/}
-                <DescriptionSection>
-
-                </DescriptionSection>
-                {/*<LocationSection>*/}
-                {/*    <McText h3>LOCATION</McText>*/}
-                {/*    <View*/}
-                {/*        style={{*/}
-                {/*        height: 250*/}
-                {/*    }}>*/}
-                {/*        <MapView*/}
-                {/*            provider={PROVIDER_GOOGLE}*/}
-                {/*            style={{*/}
-                {/*                height: 250,*/}
-                {/*                borderRadius: 30,*/}
-                {/*                marginTop: 20*/}
-                {/*            }}*/}
-                {/*            minZoomLevel={15}*/}
-                {/*            initialRegion={Region}*/}
-                {/*            customMapStyle={mapDarkStyle}*/}
-                {/*            pointerEvents="none">*/}
-                {/*        </MapView>*/}
-                {/*    </View>*/}
-                {/*    <View style={{paddingBottom: 150}}/>*/}
-                {/*</LocationSection>*/}
-
                 <Animatable.View animation={"fadeInUpBig"} style={styles.footer}>
-                    <Text style={{color: 'white', fontSize: 20, paddingBottom: 20}}>Team members (required 4)</Text>
                     <View style={{paddingHorizontal: 15}}>
                         <InputField
-                            placeholder="Enter tournament name"
-                            label="Name"
-                            onChange={() => {}}
+                            placeholder={"Team name"}
+                            label={"Team name"}
                             errorText={""}
-                            checked={true}>
+                            onChange={onChangeTeamName}
+                            checked={teamName.length > 5}>
                         </InputField>
-                        <InputField
-                            placeholder="Enter tournament name"
-                            label="Name"
-                            onChange={() => {}}
-                            errorText={""}
-                            checked={true}>
-                        </InputField>
-
-                        <InputField
-                            placeholder="Enter tournament name"
-                            label="Name"
-                            onChange={() => {}}
-                            errorText={""}
-                            checked={true}>
-                        </InputField>
-
-                        <InputField
-                            placeholder="Enter tournament name"
-                            label="Name"
-                            onChange={() => {}}
-                            errorText={""}
-                            checked={true}>
-                        </InputField>
+                        {[...Array(selectedEvent?.maxTeamSize)].map((element, index) => ( 
+                             <InputField
+                                placeholder={"Name for player "+ (+index + 1)}
+                                label={"Player "+ (+index + 1)}
+                                errorText={""}
+                                onChange={(value) => updateNames(index, value)}
+                                checked={names[index]?.length > 6}>
+                            </InputField>
+                        ))}
                     </View>
                         <View style={styles.button}>
                             <TouchableOpacity
-                                onPress={() => {}}
+                                onPress={addTeam}
                                 style={[
                                     styles.signIn,
                                     {
@@ -197,50 +186,9 @@ const EventDetail = ({ navigation, route }) => {
                                 </Text>
                             </TouchableOpacity>
                         </View>
+                        <Text style={{color: 'white', fontSize: 14, paddingTop: 20}}>*Player names are userenames from our application</Text>
                 </Animatable.View>
             </ScrollView>
-            {/*<BottomBarSection>*/}
-            {/*    <View style={{*/}
-            {/*        flexDirection: 'row',*/}
-            {/*        justifyContent: 'space-between',*/}
-            {/*        alignItems: 'center',*/}
-            {/*        marginHorizontal: 30*/}
-            {/*    }}>*/}
-            {/*        <View>*/}
-            {/*            <McText style={{opacity: 0.5, letterSpacing: 1, fontFamily: 'Roboto_500Medium'}}>PRICE</McText>*/}
-            {/*            <View style={{*/}
-            {/*                flexDirection: 'row',*/}
-            {/*                justifyContent: 'flex-end',*/}
-            {/*                alignItems: 'flex-end'}}>*/}
-            {/*                <McText h2 style={{color: '#03DAC5', fontFamily: 'Roboto_500Medium'}}>Free</McText>*/}
-            {/*                <McText h3> /person</McText>*/}
-            {/*            </View>*/}
-            {/*        </View>*/}
-            {/*            <TouchableOpacity*/}
-            {/*                onPress={()=>{navigation.navigate('Ticket')}}>*/}
-            {/*                <LinearGradient*/}
-            {/*                    colors={['#03DAC5', '#03DAC5']}*/}
-            {/*                    start={{ x: 0, y: 1 }}*/}
-            {/*                    end={{ x: 1, y: 1}}*/}
-            {/*                    style={{*/}
-            {/*                        width: 173,*/}
-            {/*                        height: 53,*/}
-            {/*                        justifyContent: 'center',*/}
-            {/*                        alignItems: 'center',*/}
-            {/*                        borderRadius: 15*/}
-            {/*                    }}>*/}
-            {/*                    <View style={{*/}
-            {/*                        flexDirection: 'row',*/}
-            {/*                        justifyContent: 'center',*/}
-            {/*                        alignItems: 'center'*/}
-            {/*                    }}>*/}
-            {/*                        <McText h3>Get ticket</McText>*/}
-
-            {/*                    </View>*/}
-            {/*                </LinearGradient>*/}
-            {/*            </TouchableOpacity>*/}
-            {/*    </View>*/}
-            {/*</BottomBarSection>*/}
         </View>
     );
 };
@@ -248,7 +196,7 @@ const EventDetail = ({ navigation, route }) => {
 const SectionImageHeader = styled.View`
   flex: 1;
   justify-content: space-between;
-  margin-top: ${Platform.OS === 'is' ? '40px' : '20px'}
+  margin-top: ${Platform.OS === 'ios' ? '40px' : '20px'}
   margin-left: 30px;
   margin-right: 30px;
 `;
