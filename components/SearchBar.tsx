@@ -15,6 +15,8 @@ import _ from 'lodash'
 import Animated, {Easing} from 'react-native-reanimated'
 import { useNavigation } from '@react-navigation/native';
 import SearchListItem from "./SearchListItem";
+import {GetUsername} from "../services/";
+import {GetId} from "../services";
 const { Value, timing } = Animated
 
 const width = Dimensions.get('window').width
@@ -48,7 +50,8 @@ class SearchBar extends React.Component {
             isLoading: true,
             tournaments: [],
             filteredTournaments: [],
-            search: ''
+            search: '',
+            username: ''
         }
 
         this._input_box_translate_x = new Value(width)
@@ -67,6 +70,7 @@ class SearchBar extends React.Component {
             .then((json) => this.setState({tournaments: json}))
             .catch((error) => console.error(error))
             .finally(() => this.setState({isLoading: false}));
+        GetUsername().then((res) => this.setState({username: res}));
     }
 
     _onFocus = () => {
@@ -209,7 +213,7 @@ class SearchBar extends React.Component {
                     <View style={styles.header_inner}>
                             <View style={{flexDirection: 'row', alignItems: 'center'}}>
                                 <Text style={{fontSize: 20, fontFamily: 'Roboto_500Medium', color: '#fff'}}>Hello
-                                    Hasan</Text>
+                                    {' ' +this.state.username}</Text>
                                 <TouchableOpacity onPress={() => {
                                     this.props.navigate('CreateTournament')
                                 }}>

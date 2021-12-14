@@ -124,11 +124,8 @@ const RankingStackScreen = ({navigation}: { navigation: any }) => (
         }
     }}>
         <ProfileStack.Screen name="Ranking" component={RankingScreen} options={{
-            title: 'Ranking',
-            headerLeft: () => (
-                <Icon.Button name="ios-menu" size={25} backgroundColor="#009387"
-                             onPress={() => navigation.openDrawer()}/>
-            )
+            title: '',
+            headerShown: false,
         }}/>
     </ProfileStack.Navigator>
 );

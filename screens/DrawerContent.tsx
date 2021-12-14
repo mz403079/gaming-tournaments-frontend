@@ -1,4 +1,4 @@
-import React  from 'react';
+import React, {useEffect, useState} from 'react';
 import { View, StyleSheet } from 'react-native';
 import {
     useTheme,
@@ -13,8 +13,19 @@ import {
 } from '@react-navigation/drawer';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import{ AuthContext } from '../components/context';
+import {GetEmail, GetName, GetSurname, GetUsername} from "../services";
 export function DrawerContent({ props }) {
+    const [userName, setUserName] = useState<string>('');
+    const [userSurname, setUserSurname] = useState<string>('');
+    const [userEmail, setUserEmail] = useState<string>('');
+    const [userNickname, setUserNickname] = useState<string>('');
+    useEffect(() => {
+        GetUsername().then((res) => setUserNickname(res));
+        GetName().then((res) => setUserName(res));
+        GetSurname().then((res) => setUserSurname(res));
+        GetEmail().then((res) => setUserEmail(res));
 
+    })
     const paperTheme = useTheme();
 
     const { signOut, toggleTheme } = React.useContext(AuthContext);
@@ -32,8 +43,8 @@ export function DrawerContent({ props }) {
                                 size={50}
                             />
                             <View style={{marginLeft:15, flexDirection:'column'}}>
-                                <Title style={styles.title}>Jan Kowalski</Title>
-                                <Caption style={styles.caption}>@hasan</Caption>
+                                <Title style={styles.title}>{userName + ' ' + userSurname}</Title>
+                                <Caption style={styles.caption}>@{userNickname}</Caption>
                             </View>
                         </View>
 

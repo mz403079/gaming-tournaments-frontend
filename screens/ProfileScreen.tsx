@@ -2,8 +2,20 @@ import {Text, View, StyleSheet, SafeAreaView} from "react-native";
 import React, {useState, useEffect} from "react";
 import {Avatar, Title, Caption, TouchableRipple} from 'react-native-paper'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {GetEmail, GetName, GetSurname, GetUsername} from "../services";
 
 const ProfileScreen = ({ navigation }) => {
+    const [userName, setUserName] = useState<string>('');
+    const [userSurname, setUserSurname] = useState<string>('');
+    const [userEmail, setUserEmail] = useState<string>('');
+    const [userNickname, setUserNickname] = useState<string>('');
+    useEffect(() => {
+        GetUsername().then((res) => setUserNickname(res));
+        GetName().then((res) => setUserName(res));
+        GetSurname().then((res) => setUserSurname(res));
+        GetEmail().then((res) => setUserEmail(res));
+
+    })
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.userInfoSection}>
@@ -18,8 +30,8 @@ const ProfileScreen = ({ navigation }) => {
                         <Title style={[styles.title, {
                             marginTop: 15,
                             marginBottom: 5,
-                        }]}>Jan Kowalski</Title>
-                        <Caption style={styles.caption}>@hasan</Caption>
+                        }]}>{userName + ' ' + userSurname}</Title>
+                        <Caption style={styles.caption}>@{userNickname}</Caption>
                     </View>
                 </View>
             </View>
@@ -27,7 +39,7 @@ const ProfileScreen = ({ navigation }) => {
             <View style={styles.userInfoSection}>
                 <View style={styles.row}>
                     <Icon name="email-outline" color="#03DAC5" size={20}/>
-                    <Text style={{color:"#c7c7c7", marginLeft: 20}}>mati_hasan@email.com</Text>
+                    <Text style={{color:"#c7c7c7", marginLeft: 20}}>{userEmail}</Text>
                 </View>
             </View>
 
