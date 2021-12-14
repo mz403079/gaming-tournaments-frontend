@@ -101,6 +101,7 @@ const CreateTournament = ({ navigation, route }) => {
           ok = false
       }
   }))
+
     if(ok)
     AddTournament({
       name: data.name,
@@ -132,7 +133,7 @@ const CreateTournament = ({ navigation, route }) => {
       street,
       regulations,
     } = data;
-    console.log(statusApi)
+ 
     setErrorMessages({
       ...errorMessages,
       nameError: name.length > 0 ? "" : "This field is required",
