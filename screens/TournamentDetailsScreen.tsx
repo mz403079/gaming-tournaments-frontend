@@ -138,6 +138,18 @@ const EventDetail = ({ navigation, route }) => {
                     </TouchableOpacity>
                 </ButtonSection>
                 <DescriptionSection>
+                <McText body3>
+                    { "Tournament Organizer: " + selectedEvent?.organizer.name + " " + selectedEvent?.organizer.surname } 
+                        
+                    </McText>
+                    <View
+  style={{
+    borderBottomColor: 'white',
+    marginTop: 5,
+    marginBottom: 10,
+    borderBottomWidth: 1,
+  }}
+/>
                     <McText body3>
                         {selectedEvent?.winner ? (
                             "Tournament winner: " +selectedEvent?.winner
@@ -198,6 +210,7 @@ const EventDetail = ({ navigation, route }) => {
                         </View>
                     </View>
                         <TouchableOpacity
+                            disabled={selectedEvent?.winner !== null}
                             onPress={()=>{navigation.navigate('RegistrationForTournaments', {selectedEvent})}}>
                             <LinearGradient
                                 colors={['#03DAC5', '#03DAC5']}
